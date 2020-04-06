@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>My Little Tetris</title>
+		<style>
+			body { background: #F7F7F7; }
+			#board {
+				margin: 0 auto;
+				display: block;
+				border: 2px solid black;
+				border-bottom: 5px solid green;
+				background: white;
+			}
+			#lines {
+				display: block;
+				width: 240px;
+				margin: 0 auto;
+				margin-top: 2em;
+				color: #444;
+				font-size: 1.5em;
+			}
+			h1 {
+			  text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 id="title">Jeu Tétris</h1>
+		<span id="lines">Lines: 0</span>
+		<canvas id="board">
+		</canvas>
+		<script src="tetrominoes.js"></script>
+		<script src="tetris.js"></script>
+
+
+		<script type="text/javascript">
+			
+			function bernoulli(p) {
+				var t = Math.random();
+				if (t < p){
+					// succes
+					return true;
+				}
+				// echec
+				return false;
+			}
+
+			function bernoulliApplication(p){
+				if (bernoulli(p) == true){
+					document.getElementById("title").style.color = "black";
+					document.body.style.backgroundColor = "white";
+				}
+				else {
+					document.getElementById("title").style.color = "white";
+					document.body.style.backgroundColor = "black";
+				}
+			}
+			//console.log("Bernoulli");
+			//console.log(bernoulli(0.5));
+
+			bernoulliApplication(0.5);
+
+		</script>
+	</body>
+</html>
