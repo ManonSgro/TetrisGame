@@ -16,9 +16,21 @@ for (var r = 0; r < height; r++) {
 	}
 }
 
+function binomiale(p, n){
+    var c = 0;
+    for(var k=1; k<n; k++){
+        var t = Math.random();
+        if(t<p){
+            c++;
+        }
+    }
+    return c;
+}
 
 function newPiece() {
-	var p = pieces[parseInt(Math.random() * pieces.length, 10)];
+	//var p = pieces[parseInt(Math.random() * pieces.length, 10)];
+    //var p = pieces[binomiale(0.5, pieces.length)];
+    var p = pieces[binomiale(binomialeInput.value/10, pieces.length)];
 	return new Piece(p[0], p[1]);
 }
 
@@ -256,6 +268,59 @@ function main() {
 	}
 }
 
+var stats = {
+    I:0,
+    J:0,
+    L:0,
+    O:0,
+    S:0,
+    T:0,
+    Z:0
+}
+
+function binomialeChangeStats(binomialeVariable){
+    for(i=0;i<100;i++){
+        piece = pieces[binomiale(binomialeVariable, pieces.length)];
+        switch (piece[0]){
+            case I:
+                stats.I++;
+                break;
+            case J:
+                stats.J++;
+                break;
+            case L:
+                stats.L++;
+                break;
+            case O:
+                stats.O++;
+                break;
+            case S:
+                stats.S++;
+                break;
+            case T:
+                stats.T++;
+                break;
+            case Z:
+                stats.Z++;
+                break;
+        }
+    }
+}
+let binomialeInput = document.querySelector('#binomialeInput'),
+    binomialeParameterValue = document.querySelector('.binomialeParameterValue');
+
+binomialeParameterValue.innerHTML = binomialeInput.value/10;
+binomialeChangeStats(binomialeInput.value/10);
+
+binomialeInput.addEventListener('input', function () {
+  binomialeParameterValue.innerHTML = binomialeInput.value/10;
+    //binomialeChangeStats(binomialeInput.value/10);
+    
+}, false);
+console.log(stats);
+for(const prop in stats){
+   console.log("."+prop+"_chance"); document.querySelector("."+prop+"_chance").innerHTML = "~"+stats[prop]+"%";
+}
 piece = newPiece();
 drawBoard();
 linecount.textContent = "Lines: 0";

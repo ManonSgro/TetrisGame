@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>My Little Tetris</title>
+		<title>Tetris Game</title>
 		<style>
 			body { background: #F7F7F7; }
 			#board {
@@ -30,6 +30,21 @@
 		<span id="lines">Lines: 0</span>
 		<canvas id="board">
 		</canvas>
+        
+        <div id="stats">
+            <h2>Binomiale</h2>
+            <ul>
+                <li>Chance d'obtenir I : <span class="I_chance"></span></li>
+                <li>Chance d'obtenir J : <span class="J_chance"></span></li>
+                <li>Chance d'obtenir L : <span class="L_chance"></span></li>
+                <li>Chance d'obtenir O : <span class="O_chance"></span></li>
+                <li>Chance d'obtenir S : <span class="S_chance"></span></li>
+                <li>Chance d'obtenir T : <span class="T_chance"></span></li>
+                <li>Chance d'obtenir Z : <span class="Z_chance"></span></li>
+            </ul>
+            <div>Paramètre : <span class="binomialeParameterValue"></span></div>
+            <input id="binomialeInput" type="range" min="1" max="10" step="1">
+        </div>
 		<script src="tetrominoes.js"></script>
 		<script src="tetris.js"></script>
 
@@ -53,7 +68,7 @@
 				}
 				else {
 					document.getElementById("title").style.color = "white";
-					document.body.style.backgroundColor = "black";
+					document.body.style.backgroundColor = "grey";
 				}
 			}
 			//console.log("Bernoulli");
