@@ -97,6 +97,13 @@
 			}
 
 
+			// Si X suit une loi uniforme sur [a;b]
+			// La probabilité de P(c≤X≤d)
+			function uniforme(a,b,c,d){
+				return ((d-c)/(b-a));
+			}
+
+
 			bernoulliApplication(0.5);
 
 			console.log("Combin");
@@ -105,6 +112,10 @@
 			console.log("Hypergeometrique");
 			console.log(hypergeometrique(3,5,13,52));
 			//console.log(hypergeometrique(1,3,5,15));
+			console.log("------");
+			console.log("Uniforme");
+			//console.log(uniforme(-2,3,0.5,0.7));
+			console.log(uniforme(-2,3,1,3));
 			console.log("------");
 
 		</script>
