@@ -27,6 +27,20 @@ function binomiale(p, n){
     return c;
 }
 
+function poisson_distribution(lambda){
+    var L = Math.exp(-lambda);
+    var p = 1.0;
+    var k = 0;
+    while(p>L){
+        k++;
+        p *= Math.random();
+    }
+    return (k-1);
+    
+}
+
+console.log(poisson_distribution(6));
+
 function newPiece() {
 	//var p = pieces[parseInt(Math.random() * pieces.length, 10)];
     //var p = pieces[binomiale(0.5, pieces.length)];
