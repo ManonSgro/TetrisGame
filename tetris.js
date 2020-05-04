@@ -320,6 +320,104 @@ function binomialeChangeStats(binomialeVariable){
         }
     }
 }
+
+
+function bernoulli(p) {
+	var t = Math.random();
+	if (t < p){
+		// succes
+		return true;
+	}
+	// echec
+	return false;
+}
+
+function bernoulliApplication(p){
+	if (bernoulli(p) == true){
+		document.getElementById("title").style.color = "black";
+		document.body.style.backgroundColor = "white";
+	}
+	else {
+		document.getElementById("title").style.color = "white";
+		document.body.style.backgroundColor = "grey";
+	}
+}
+//console.log("Bernoulli");
+//console.log(bernoulli(0.5));
+
+// Nombre de combinaisons de n objets pris k à k
+// On ne le fait pas en récursif car c'est moins rapide
+function combin(n, k){
+	if (k > n/2){
+		k = n - k;
+	}
+	x = 1;
+	y = 1;
+	i = n-k+1
+	while (i <= n) {
+	  x = ((x*i)/y);
+	  y += 1;
+	  i += 1;
+	}
+	return x;
+}
+
+// Probabilité d'avoir k réussites dans un échantillon de taille n, sachant qu'il y en a g dans la population de taille t
+function hypergeometrique(k, n, g, t){
+	return combin(g,k)*combin((t-g),(n-k))/combin(t,n);
+}
+
+function hypergeometriqueApplication(k, n, g, t){
+	if (hypergeometrique(k, n, g, t) > 0.3){
+		pieces = [
+			[I, "#2e4d5c"],
+			[J, "#2fb19e"],
+			[L, "#4a94c8"],
+			[O, "#58628c"],
+			[S, "#95ce7b"],
+			[T, "#f5c748"],
+			[Z, "#ea7a39"]
+		];
+	}
+	else {
+		pieces = [
+			[I, "#c5516a"],
+			[J, "#fa6967"],
+			[L, "#ff7065"],
+			[O, "#fbca6e"],
+			[S, "#ea7a39"],
+			[T, "#a383b4"],
+			[Z, "#ce7bcb"]
+		];
+	}
+}
+
+// Si X suit une loi uniforme sur [a;b]
+// La probabilité de P(c≤X≤d)
+function uniforme(a,b,c,d){
+	return ((d-c)/(b-a));
+}
+
+
+bernoulliApplication(0.5);
+
+console.log("Combin");
+console.log(combin(50,20));
+console.log("------");
+console.log("Hypergeometrique");
+console.log(hypergeometrique(2,5,26,52));
+console.log(hypergeometriqueApplication(2,5,26,52));
+/*console.log(hypergeometrique(0,5,13,52));
+console.log(hypergeometriqueApplication(0,5,13,52));*/
+//console.log(hypergeometrique(1,3,5,15));
+console.log("------");
+console.log("Uniforme");
+//console.log(uniforme(-2,3,0.5,0.7));
+console.log(uniforme(-2,3,1,3));
+console.log("------");
+
+
+
 let binomialeInput = document.querySelector('#binomialeInput'),
     binomialeParameterValue = document.querySelector('.binomialeParameterValue');
 
