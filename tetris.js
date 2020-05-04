@@ -368,7 +368,29 @@ function hypergeometrique(k, n, g, t){
 }
 
 function hypergeometriqueApplication(k, n, g, t){
-	if (hypergeometrique(k, n, g, t) > 0.3){
+	if (hypergeometrique(k, n, g, t) <= 0.1){
+		document.body.style.fontFamily = "\"Comic Sans MS\"";
+	}
+	else if ((hypergeometrique(k, n, g, t) > 0.1) && (hypergeometrique(k, n, g, t) <= 0.2)){
+		document.body.style.fontFamily = "\"Courier New\"";
+	}
+	else if ((hypergeometrique(k, n, g, t) > 0.2) && (hypergeometrique(k, n, g, t) <= 0.3)){
+		document.body.style.fontFamily = "\"Arial Black\"";
+	}
+	else {
+		document.body.style.fontFamily = "\"Lucida Console\"";
+	}
+}
+
+// Si X suit une loi uniforme sur [a;b]
+// La probabilité de P(c≤X≤d)
+function uniforme(a,b,c,d){
+	return ((d-c)/(b-a));
+}
+
+
+function uniformeApplication(a,b,c,d){
+	if (uniforme(a,b,c,d) < 0.5){
 		pieces = [
 			[I, "#2e4d5c"],
 			[J, "#2fb19e"],
@@ -392,13 +414,6 @@ function hypergeometriqueApplication(k, n, g, t){
 	}
 }
 
-// Si X suit une loi uniforme sur [a;b]
-// La probabilité de P(c≤X≤d)
-function uniforme(a,b,c,d){
-	return ((d-c)/(b-a));
-}
-
-
 bernoulliApplication(0.5);
 
 console.log("Combin");
@@ -406,14 +421,18 @@ console.log(combin(50,20));
 console.log("------");
 console.log("Hypergeometrique");
 console.log(hypergeometrique(2,5,26,52));
-console.log(hypergeometriqueApplication(2,5,26,52));
-/*console.log(hypergeometrique(0,5,13,52));
-console.log(hypergeometriqueApplication(0,5,13,52));*/
+hypergeometriqueApplication(2,5,26,52);
+console.log(hypergeometrique(0,5,13,52));
+console.log(hypergeometriqueApplication(0,5,13,52));
 //console.log(hypergeometrique(1,3,5,15));
+
 console.log("------");
 console.log("Uniforme");
 //console.log(uniforme(-2,3,0.5,0.7));
-console.log(uniforme(-2,3,1,3));
+console.log(uniforme(-2,3,-1,3));
+uniformeApplication(-2,3,-1,3);
+/*console.log(uniforme(-2,3,1,3));
+uniformeApplication(-2,3,1,3);*/
 console.log("------");
 
 
