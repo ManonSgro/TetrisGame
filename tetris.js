@@ -16,31 +16,6 @@ for (var r = 0; r < height; r++) {
 	}
 }
 
-function binomiale(p, n){
-    var c = 0;
-    for(var k=1; k<n; k++){
-        var t = Math.random();
-        if(t<p){
-            c++;
-        }
-    }
-    return c;
-}
-
-function poisson_distribution(lambda){
-    var L = Math.exp(-lambda);
-    var p = 1.0;
-    var k = 0;
-    while(p>L){
-        k++;
-        p *= Math.random();
-    }
-    return (k-1);
-    
-}
-
-console.log(poisson_distribution(6));
-
 function newPiece() {
 	//var p = pieces[parseInt(Math.random() * pieces.length, 10)];
     //var p = pieces[binomiale(0.5, pieces.length)];
@@ -292,6 +267,17 @@ var stats = {
     Z:0
 }
 
+function binomiale(p, n){
+    var c = 0;
+    for(var k=1; k<n; k++){
+        var t = Math.random();
+        if(t<p){
+            c++;
+        }
+    }
+    return c;
+}
+
 function binomialeChangeStats(binomialeVariable){
     for(i=0;i<100;i++){
         piece = pieces[binomiale(binomialeVariable, pieces.length)];
@@ -320,7 +306,6 @@ function binomialeChangeStats(binomialeVariable){
         }
     }
 }
-
 
 function bernoulli(p) {
 	var t = Math.random();
@@ -414,26 +399,35 @@ function uniformeApplication(a,b,c,d){
 	}
 }
 
+function poisson_distribution(lambda){
+    var L = Math.exp(-lambda);
+    var p = 1.0;
+    var k = 0;
+    while(p>L){
+        k++;
+        p *= Math.random();
+    }
+    return (k-1);
+    
+}
+
+function poisson_distributionApplication(p){
+	if (poisson_distribution(p) < 7){
+		document.getElementById("titleh2").innerHTML = "Tu n’as pas échoué tant que tu continues à essayer !";
+	}
+	else {
+		document.getElementById("titleh2").innerHTML = "Repousse tes limites !";
+
+	}
+}
+
+
+
 bernoulliApplication(0.5);
-
-console.log("Combin");
-console.log(combin(50,20));
-console.log("------");
-console.log("Hypergeometrique");
-console.log(hypergeometrique(2,5,26,52));
 hypergeometriqueApplication(2,5,26,52);
-console.log(hypergeometrique(0,5,13,52));
-console.log(hypergeometriqueApplication(0,5,13,52));
-//console.log(hypergeometrique(1,3,5,15));
-
-console.log("------");
-console.log("Uniforme");
-//console.log(uniforme(-2,3,0.5,0.7));
-console.log(uniforme(-2,3,-1,3));
 uniformeApplication(-2,3,-1,3);
-/*console.log(uniforme(-2,3,1,3));
-uniformeApplication(-2,3,1,3);*/
-console.log("------");
+poisson_distributionApplication(6);
+
 
 
 

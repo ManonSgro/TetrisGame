@@ -20,13 +20,14 @@
 				color: #444;
 				font-size: 1.5em;
 			}
-			h1 {
+			h1, #titleh2 {
 			  text-align: center;
 			}
 		</style>
 	</head>
 	<body>
 		<h1 id="title">Jeu Tétris</h1>
+		<h2 id="titleh2"></h2>
 		<span id="lines">Lines: 0</span>
 		<canvas id="board">
 		</canvas>
@@ -48,77 +49,5 @@
 		<script src="tetrominoes.js"></script>
 		<script src="tetris.js"></script>
 
-
-		<script type="text/javascript">
-			
-			/*function bernoulli(p) {
-				var t = Math.random();
-				if (t < p){
-					// succes
-					return true;
-				}
-				// echec
-				return false;
-			}
-
-			function bernoulliApplication(p){
-				if (bernoulli(p) == true){
-					document.getElementById("title").style.color = "black";
-					document.body.style.backgroundColor = "white";
-				}
-				else {
-					document.getElementById("title").style.color = "white";
-					document.body.style.backgroundColor = "grey";
-				}
-			}
-			//console.log("Bernoulli");
-			//console.log(bernoulli(0.5));
-
-			// Nombre de combinaisons de n objets pris k à k
-			// On ne le fait pas en récursif car c'est moins rapide
-			function combin(n, k){
-				if (k > n/2){
-					k = n - k;
-				}
-				x = 1;
-				y = 1;
-				i = n-k+1
-				while (i <= n) {
-				  x = ((x*i)/y);
-				  y += 1;
-				  i += 1;
-				}
-				return x;
-			}
-
-			// Probabilité d'avoir k réussites dans un échantillon de taille n, sachant qu'il y en a g dans la population de taille t
-			function hypergeometrique(k, n, g, t){
-				return combin(g,k)*combin((t-g),(n-k))/combin(t,n);
-			}
-
-			function hypergeometriqueApplication(p){}
-
-			// Si X suit une loi uniforme sur [a;b]
-			// La probabilité de P(c≤X≤d)
-			function uniforme(a,b,c,d){
-				return ((d-c)/(b-a));
-			}
-
-
-			bernoulliApplication(0.5);
-
-			console.log("Combin");
-			console.log(combin(50,20));
-			console.log("------");
-			console.log("Hypergeometrique");
-			console.log(hypergeometrique(3,5,13,52));
-			//console.log(hypergeometrique(1,3,5,15));
-			console.log("------");
-			console.log("Uniforme");
-			//console.log(uniforme(-2,3,0.5,0.7));
-			console.log(uniforme(-2,3,1,3));
-			console.log("------");*/
-
-		</script>
 	</body>
 </html>
