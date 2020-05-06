@@ -9,12 +9,34 @@ canvas.width = width * tilesz;
 canvas.height = height * tilesz;
 
 var board = [];
-for (var r = 0; r < height; r++) {
-	board[r] = [];
-	for (var c = 0; c < width; c++) {
-		board[r][c] = "";
-	}
+function fillBlankBoard(){
+    for (var r = 0; r < height; r++) {
+	   board[r] = [];
+        for (var c = 0; c < width; c++) {
+            board[r][c] = "";
+        }
+    }
 }
+fillBlankBoard();
+
+
+var bgColor = "#FFF";
+var bgDarkColor = "#aaa";
+btnWidth=canvas.width/3*2;
+btnHeight=50;
+activeScreen = "menu";
+rectsGame = null;
+rectsMenu = {
+    btnMenu1:{x: (canvas.width-btnWidth)/2, y: canvas.height/2-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+        activeScreen="game";
+        changeScreen();
+    }},
+    btnMenu2:{x:  (canvas.width-btnWidth)/2, y: canvas.height/2+20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+        activeScreen="menu";
+        changeScreen();
+    }}
+}
+rects = null;
 
 function newPiece() {
 	//var p = pieces[parseInt(Math.random() * pieces.length, 10)];
@@ -127,8 +149,10 @@ Piece.prototype.lock = function() {
 
 			if (this.y + iy < 0) {
 				// Game ends!
-				alert("You're done!");
+				//alert("You're done!");
 				done = true;
+                activeScreen = "menu";
+                changeScreen();
 				return;
 			}
 			board[this.y + iy][this.x + ix] = this.color;
@@ -177,7 +201,8 @@ Piece.prototype._fill = function(color) {
 };
 
 Piece.prototype.undraw = function(ctx) {
-	this._fill(clear);
+	//this._fill(clear);
+    this._fill("#fff");
 };
 
 Piece.prototype.draw = function(ctx) {
@@ -232,11 +257,60 @@ function key(k) {
 	}
 }
 
+CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius, fill, stroke) {
+  if (typeof stroke == "undefined" ) {
+    stroke = true;
+  }
+  if (typeof radius === "undefined") {
+    radius = 5;
+  }
+  this.beginPath();
+  this.moveTo(x + radius, y);
+  this.lineTo(x + width - radius, y);
+  this.quadraticCurveTo(x + width, y, x + width, y + radius);
+  this.lineTo(x + width, y + height - radius);
+  this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  this.lineTo(x + radius, y + height);
+  this.quadraticCurveTo(x, y + height, x, y + height - radius);
+  this.lineTo(x, y + radius);
+  this.quadraticCurveTo(x, y, x + radius, y);
+  this.closePath();
+  if (stroke) {
+    this.stroke();
+  }
+  if (fill) {
+    this.fill();
+  }        
+}
+
+function drawMenu() {
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = rects.btnMenu1.hover?bgDarkColor:bgColor;
+	ctx.roundRect(rects.btnMenu1.x, rects.btnMenu1.y, rects.btnMenu1.w, rects.btnMenu1.h, 5, true, false);
+    
+    ctx.font = "1.5rem VT323";
+    ctx.textAlign="center"; 
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Play", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/2-btnHeight-20+(btnHeight/2));
+    
+    ctx.fillStyle = rects.btnMenu2.hover?bgDarkColor:bgColor;
+	ctx.roundRect(rects.btnMenu2.x, rects.btnMenu2.y, rects.btnMenu2.w, rects.btnMenu2.h, 5, true, false);
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Stats", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/2+20+(btnHeight/2));
+}
+
 function drawBoard() {
 	var fs = ctx.fillStyle;
+    //ctx.fillStyle = "#fff";
 	for (var y = 0; y < height; y++) {
 		for (var x = 0; x < width; x++) {
-			ctx.fillStyle = board[y][x] || clear;
+			//ctx.fillStyle = board[y][x] || clear;
+            ctx.fillStyle = board[y][x] || "#fff";
+            //ctx.fillStyle = "#fff";
 			drawSquare(x, y, tilesz, tilesz);
 		}
 	}
@@ -319,12 +393,14 @@ function bernoulli(p) {
 
 function bernoulliApplication(p){
 	if (bernoulli(p) == true){
-		document.getElementById("title").style.color = "black";
-		document.body.style.backgroundColor = "white";
+		document.body.classList = "body--blue";
+        bgColor = "#00d2ff";
+        bgDarkColor = "#009fc1";
 	}
 	else {
-		document.getElementById("title").style.color = "white";
-		document.body.style.backgroundColor = "grey";
+		document.body.classList = "body--purple";
+        bgColor = "#9d50bb";
+        bgDarkColor = "#622e76";
 	}
 }
 //console.log("Bernoulli");
@@ -413,10 +489,10 @@ function poisson_distribution(lambda){
 
 function poisson_distributionApplication(p){
 	if (poisson_distribution(p) < 7){
-		document.getElementById("titleh2").innerHTML = "Tu n’as pas échoué tant que tu continues à essayer !";
+		document.getElementById("subtitle").innerHTML = "Tu n’as pas échoué tant que tu continues d'essayer !";
 	}
 	else {
-		document.getElementById("titleh2").innerHTML = "Repousse tes limites !";
+		document.getElementById("subtitle").innerHTML = "Repousse tes limites !";
 
 	}
 }
@@ -446,7 +522,68 @@ console.log(stats);
 for(const prop in stats){
    console.log("."+prop+"_chance"); document.querySelector("."+prop+"_chance").innerHTML = "~"+stats[prop]+"%";
 }
-piece = newPiece();
-drawBoard();
-linecount.textContent = "Lines: 0";
-main();
+
+function changeScreen(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    switch(activeScreen){
+        case "menu":
+            rects = rectsMenu;
+            drawMenu();
+            break;
+        case "game":
+            rects = rectsGame;
+            fillBlankBoard();
+            done = false;
+            
+            piece = newPiece();
+            drawBoard();
+            linecount.textContent = "Lines: 0";
+            main();
+            break;
+        default:
+            break;
+        
+    }
+}
+
+canvas.onmousemove = function(e) {
+
+  // Get the current mouse position
+    var r = canvas.getBoundingClientRect(),
+        x = e.clientX - r.left, y = e.clientY - r.top;
+    if( rects && rects !== "null" && rects !== "undefined" ){
+        for(var r in rects){
+        
+            if(x >= rects[r].x && x <= rects[r].x + rects[r].w &&
+               y >= rects[r].y && y <= rects[r].y + rects[r].h) {
+                rects[r].hover=true;
+            }else{
+                rects[r].hover=false;
+            }
+            drawMenu();
+        }
+    }
+
+};
+canvas.onclick = function(e) {
+
+  // Get the current mouse position
+    var r = canvas.getBoundingClientRect(),
+        x = e.clientX - r.left, y = e.clientY - r.top;
+    
+    if( rects && rects !== "null" && rects !== "undefined" ){
+        for(var r in rects){
+            if( rects && rects !== "null" && rects !== "undefined" ){
+                if(x >= rects[r].x && x <= rects[r].x + rects[r].w &&
+                   y >= rects[r].y && y <= rects[r].y + rects[r].h) {
+                    rects[r].click();
+                }
+            }
+        }
+    }
+    
+
+};
+
+changeScreen();
+
