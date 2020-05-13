@@ -587,3 +587,82 @@ canvas.onclick = function(e) {
 
 changeScreen();
 
+
+// calcul de la moyenne d'un tableau
+function moyenne(data){
+  var sum = data.reduce(function(sum, value){
+    return sum + value;
+  }, 0);
+
+  var avg = sum / data.length;
+  return avg;
+}
+
+function ecartType(values){
+  var avg = moyenne(values);
+  var squareDiffs = values.map(function(value){
+    var diff = value - avg;
+    var sqrDiff = diff * diff;
+    return sqrDiff;
+  });
+  var avgSquareDiff = moyenne(squareDiffs);
+  var stdDev = Math.sqrt(avgSquareDiff);
+  return stdDev;
+}
+
+
+function ecartMoyen(data){
+	var elem = [];
+	var b = data.length;
+	var final;
+	var avg = moyenne(data);
+	for (i = 0; i < b; i++){
+		elem.push(Math.abs(data[i]-avg));
+	}
+	final = elem.reduce((f, g) => f + g, 0)
+	return final/b;
+}
+
+
+function arrayToObject(data){
+	return Object.assign({}, data);; 
+}
+
+
+
+function print(histogram, captionTop = 'Count', captionBottom = 'Values') {
+    var keys = Object.keys(histogram),
+        maxKey = keys[keys.length - 1],
+        maxValue = Math.max(...Object.values(histogram)),
+        slot0 = Math.max(captionTop.length, captionBottom.length),
+        slot = Math.max(...keys.map(k => histogram[k].toString().length), (maxKey - 1).toString().length + 1) + 3,
+        line,
+        result = '';
+    do {
+        line = (maxValue === +keys[0] ? captionTop : '').padEnd(slot0);
+        for (let k in histogram)
+            line += (histogram[k] >= maxValue ? ''.padStart(slot - 1) + 'X' : '').padEnd(slot + 1);
+        result += line + '\n';
+    } while (--maxValue)
+
+    line = ''.padEnd(slot0, '-');
+    for (let k in histogram) line += ' ' + ''.padStart(slot, '-');
+    result += line + '\n';
+    line = captionBottom.padEnd(slot0);
+    for (let k in histogram) {
+        if (k === maxKey) k = '+' + (maxKey - 1);
+        line += (''.padStart(slot - k.length) + k).padEnd(slot + 1);
+    }
+    result += line;
+    return result;
+}
+//document.getElementById('out').innerHTML = print({ 1: 3, 2: 3, 3: 1, 5: 3, 6: 7, 7:8 });
+
+
+console.log(moyenne([5, 1, 1, 1, 5]));
+console.log(ecartType([5, 1, 1, 1, 5]));
+console.log(ecartMoyen([5, 1, 1, 1, 5]));
+
+var obj = arrayToObject([5, 1, 1, 1, 5])
+console.log(obj);
+document.getElementById('out').innerHTML = print(obj);
