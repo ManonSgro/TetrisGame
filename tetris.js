@@ -650,7 +650,6 @@ function print(histogram, captionTop = 'Count', captionBottom = 'Values') {
     result += line + '\n';
     line = captionBottom.padEnd(slot0);
     for (let k in histogram) {
-        if (k === maxKey) k = '+' + (maxKey - 1);
         line += (''.padStart(slot - k.length) + k).padEnd(slot + 1);
     }
     result += line;
@@ -665,4 +664,6 @@ console.log(ecartMoyen([5, 1, 1, 1, 5]));
 
 var obj = arrayToObject([5, 1, 1, 1, 5])
 console.log(obj);
-document.getElementById('out').innerHTML = print(obj);
+//document.getElementById('out').innerHTML = print(obj);
+console.log(stats);
+document.getElementById('out').innerHTML = print(stats);
