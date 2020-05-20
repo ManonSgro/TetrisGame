@@ -378,6 +378,7 @@ function binomialeChangeStats(binomialeVariable){
         stats[key] = probaBinomiale(binomialeVariable, pieces.length, i)*100;
         i++;
     }
+    changeScreen();
     /*for(i=0;i<100;i++){
         piece = pieces[binomiale(binomialeVariable, pieces.length)];
         switch (piece[0]){
@@ -629,6 +630,17 @@ function drawStats(){
         ctx.fillRect(20+widthValue*j+widthValue/4,100+higher*5-stats[key]*5,widthValue/2,stats[key]*5);
         j++;
     }
+    var arrayStats = Object.keys(stats).map(function (key) { return stats[key]; });
+    ctx.textAlign="left";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Espérance binomiale :", 20, 100+i*5+50);
+   //console.log("param value="+binomialeInput.value);
+   esperance = arrondiAuCentième(pieces.length*binomialeInput.value/10);
+    
+    inf = (Math.round(esperance)-1>=0 && Math.round(esperance)-1<pieces.length)?Object.getOwnPropertyNames(stats)[Math.round(esperance)-1]:"";
+    sup = (Math.round(esperance)+1>=0 && Math.round(esperance)+1<pieces.length)?Object.getOwnPropertyNames(stats)[Math.round(esperance)+1]:"";
+    separator = (inf.length>0 && sup.length>0)?"-":"";
+    ctx.fillText(esperance+" ("+inf+separator+sup+")", 20,100+i*5+70);
 }
 
 function arrondiAuCentième(nb){
