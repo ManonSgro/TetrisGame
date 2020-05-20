@@ -634,13 +634,17 @@ function drawStats(){
     ctx.textAlign="left";
     ctx.fillStyle = "#fff";
     ctx.fillText("Espérance binomiale :", 20, 100+i*5+50);
-   //console.log("param value="+binomialeInput.value);
    esperance = arrondiAuCentième(pieces.length*binomialeInput.value/10);
     
     inf = (Math.round(esperance)-1>=0 && Math.round(esperance)-1<pieces.length)?Object.getOwnPropertyNames(stats)[Math.round(esperance)-1]:"";
     sup = (Math.round(esperance)+1>=0 && Math.round(esperance)+1<pieces.length)?Object.getOwnPropertyNames(stats)[Math.round(esperance)+1]:"";
     separator = (inf.length>0 && sup.length>0)?"-":"";
     ctx.fillText(esperance+" ("+inf+separator+sup+")", 20,100+i*5+70);
+    
+    
+    ctx.fillText("Variance binomiale :", 20, 100+i*5+90);
+   variance = arrondiAuCentième(pieces.length*binomialeInput.value/10*(1-binomialeInput.value/10));
+    ctx.fillText(variance, 20,100+i*5+110);
 }
 
 function arrondiAuCentième(nb){
