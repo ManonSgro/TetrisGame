@@ -46,8 +46,12 @@ body {
 .screen{
     border: solid 15px black;
     border-radius: 25px;
-    //margin: 0 auto;
+    margin-right: 1rem;
     
+}
+
+#stats{
+    margin-left: 1rem;
 }
 
 #board {

@@ -27,12 +27,16 @@ btnHeight=50;
 activeScreen = "menu";
 rectsGame = null;
 rectsMenu = {
-    btnMenu1:{x: (canvas.width-btnWidth)/2, y: canvas.height/2-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+    btnMenu1:{x: (canvas.width-btnWidth)/2, y: canvas.height/3-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, click: function(){
         activeScreen="game";
         changeScreen();
     }},
-    btnMenu2:{x:  (canvas.width-btnWidth)/2, y: canvas.height/2+20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+    btnMenu2:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3+20, w: btnWidth, h: btnHeight, hover:false, click: function(){
         activeScreen="stats";
+        changeScreen();
+    }},
+    btnMenu3:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3*2+20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+        activeScreen="results";
         changeScreen();
     }}
 }
@@ -42,12 +46,30 @@ rectsStats = {
         changeScreen();
     }}
 }
+rectsResults = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+        activeScreen="menu";
+        changeScreen();
+    }}
+}
 rects = null;
+
+statsReels = {
+    I:0,
+    J:0,
+    L:0,
+    O:0,
+    S:0,
+    T:0,
+    Z:0
+}
 
 function newPiece() {
 	//var p = pieces[parseInt(Math.random() * pieces.length, 10)];
-    //var p = pieces[binomiale(0.5, pieces.length)];
-    var p = pieces[binomiale(binomialeInput.value/10, pieces.length)];
+    //var p = pieces[binomiale(0.5, pieces.length)]; 
+    res = binomiale(binomialeInput.value/10, pieces.length);
+    var p = pieces[res];
+    statsReels[Object.getOwnPropertyNames(statsReels)[res]]++;
 	return new Piece(p[0], p[1]);
 }
 
@@ -301,12 +323,17 @@ function drawMenu() {
     ctx.textAlign="center"; 
     ctx.textBaseline = "middle";
     ctx.fillStyle = "#fff";
-    ctx.fillText("Play", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/2-btnHeight-20+(btnHeight/2));
+    ctx.fillText("Play", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/3-btnHeight-20+(btnHeight/2));
     
     ctx.fillStyle = rects.btnMenu2.hover?bgDarkColor:bgColor;
 	ctx.roundRect(rects.btnMenu2.x, rects.btnMenu2.y, rects.btnMenu2.w, rects.btnMenu2.h, 5, true, false);
     ctx.fillStyle = "#fff";
-    ctx.fillText("Stats", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/2+20+(btnHeight/2));
+    ctx.fillText("Stats", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/3+20+(btnHeight/2));
+    
+    ctx.fillStyle = rects.btnMenu3.hover?bgDarkColor:bgColor;
+	ctx.roundRect(rects.btnMenu3.x, rects.btnMenu3.y, rects.btnMenu3.w, rects.btnMenu3.h, 5, true, false);
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Results", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/3*2+20+(btnHeight/2));
 }
 
 function drawBoard() {
@@ -550,6 +577,7 @@ for(const prop in stats){
 }
 
 function changeScreen(){
+    console.log(statsReels);
     ctx.clearRect(0,0,canvas.width, canvas.height);
     switch(activeScreen){
         case "menu":
@@ -558,6 +586,9 @@ function changeScreen(){
             drawMenu();
             break;
         case "game":
+            for(var key in statsReels){
+                statsReels[key] = 0;
+            }
             rects = rectsGame;
             fillBlankBoard();
             done = false;
@@ -571,6 +602,11 @@ function changeScreen(){
             linecount.textContent = "";
             rects = rectsStats;
             drawStats();
+            break;
+        case "results":
+            linecount.textContent = "";
+            rects = rectsResults;
+            drawResults();
             break;
         default:
             break;
@@ -645,6 +681,90 @@ function drawStats(){
     ctx.fillText("Variance binomiale :", 20, 100+i*5+90);
    variance = arrondiAuCentième(pieces.length*binomialeInput.value/10*(1-binomialeInput.value/10));
     ctx.fillText(variance, 20,100+i*5+110);
+}
+
+
+function drawResults(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = rects.btnStats1.hover?bgDarkColor:bgColor;
+	ctx.roundRect(rects.btnStats1.x, rects.btnStats1.y, rects.btnStats1.w, rects.btnStats1.h, 5, true, false);
+    
+    ctx.font = "1.5rem VT323";
+    ctx.textAlign="center"; 
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Back to menu", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height-btnHeight-20+(btnHeight/2));
+    
+    // Lines
+    ctx.font = "1.5rem VT323";
+    ctx.textAlign="left"; 
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Lines : "+lines, 20,20);
+    
+    //Histogramme
+    ctx.textAlign="left";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Histogramme prévu:", 20,80);
+    higher = 0;
+    for(var key in stats){
+        if(stats[key]>higher){
+            higher = stats[key];
+        }
+    }
+    ctx.beginPath();
+    for(i=0; i<higher; i++){
+        ctx.moveTo(20, 100+i*5);
+        ctx.lineTo(canvas.width - 20, 100+i*5);
+        ctx.strokeStyle = "rgb(175,175,175)";
+        ctx.stroke();
+    }
+    j=0;
+    widthValue = (canvas.width-40)/Object.keys(stats).length;
+    console.log(widthValue);
+    for(var key in stats){
+        ctx.textAlign="center";
+        textWidth = ctx.measureText(key).width;
+        ctx.fillStyle = "#fff";
+        ctx.fillText(key, 20+widthValue*j+(widthValue/2),100+i*5+20);
+        
+        ctx.fillStyle = "rgb(100,100,100)";
+        ctx.fillRect(20+widthValue*j+widthValue/4,100+higher*5-stats[key]*5,widthValue/2,stats[key]*5);
+        j++;
+    }
+    
+    //Histogramme réel
+    ctx.textAlign="left";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Histogramme réel:", 20,100+i*5+60);
+    higher = 0;
+    for(var key in stats){
+        if(statsReels[key]>higher){
+            higher = statsReels[key];
+        }
+    }
+    ctx.beginPath();
+    for(i=0; i<higher; i++){
+        ctx.moveTo(20, 320+i*5);
+        ctx.lineTo(canvas.width - 20, 320+i*5);
+        ctx.strokeStyle = "rgb(175,175,175)";
+        ctx.stroke();
+    }
+    j=0;
+    widthValue = (canvas.width-40)/Object.keys(statsReels).length;
+    for(var key in statsReels){
+        ctx.textAlign="center";
+        textWidth = ctx.measureText(key).width;
+        ctx.fillStyle = "#fff";
+        ctx.fillText(key, 20+widthValue*j+(widthValue/2),320+i*5+20);
+        
+        ctx.fillStyle = "rgb(100,100,100)";
+        ctx.fillRect(20+widthValue*j+widthValue/4,320+higher*5-statsReels[key]*5,widthValue/2,statsReels[key]*5);
+        j++;
+    }
 }
 
 function arrondiAuCentième(nb){
