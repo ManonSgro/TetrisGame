@@ -32,6 +32,12 @@ rectsMenu = {
         changeScreen();
     }},
     btnMenu2:{x:  (canvas.width-btnWidth)/2, y: canvas.height/2+20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+        activeScreen="stats";
+        changeScreen();
+    }}
+}
+rectsStats = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, click: function(){
         activeScreen="menu";
         changeScreen();
     }}
@@ -352,8 +358,27 @@ function binomiale(p, n){
     return c;
 }
 
+function binomialCoef(n,k){
+    if(k==0 || k==n){
+        return 1;
+    }else{
+        return binomialCoef(n-1, k-1)+binomialCoef(n-1, k);
+    }
+}
+
+function probaBinomiale(p,n,k){
+    nk = binomialCoef(n,k);
+    proba = nk*Math.pow(p,k)*Math.pow((1-p), n-k);
+    return proba;
+}
+
 function binomialeChangeStats(binomialeVariable){
-    for(i=0;i<100;i++){
+    i=0;
+    for(var key in stats){
+        stats[key] = probaBinomiale(binomialeVariable, pieces.length, i)*100;
+        i++;
+    }
+    /*for(i=0;i<100;i++){
         piece = pieces[binomiale(binomialeVariable, pieces.length)];
         switch (piece[0]){
             case I:
@@ -378,7 +403,7 @@ function binomialeChangeStats(binomialeVariable){
                 stats.Z++;
                 break;
         }
-    }
+    }*/
 }
 
 function bernoulli(p) {
@@ -515,18 +540,19 @@ binomialeChangeStats(binomialeInput.value/10);
 
 binomialeInput.addEventListener('input', function () {
   binomialeParameterValue.innerHTML = binomialeInput.value/10;
-    //binomialeChangeStats(binomialeInput.value/10);
+  binomialeChangeStats(binomialeInput.value/10);
     
 }, false);
 console.log(stats);
 for(const prop in stats){
-   console.log("."+prop+"_chance"); document.querySelector("."+prop+"_chance").innerHTML = "~"+stats[prop]+"%";
+   console.log("."+prop+"_chance"); //document.querySelector("."+prop+"_chance").innerHTML = "~"+stats[prop]+"%";
 }
 
 function changeScreen(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
     switch(activeScreen){
         case "menu":
+            linecount.textContent = "";
             rects = rectsMenu;
             drawMenu();
             break;
@@ -540,10 +566,76 @@ function changeScreen(){
             linecount.textContent = "Lines: 0";
             main();
             break;
+        case "stats":
+            linecount.textContent = "";
+            rects = rectsStats;
+            drawStats();
+            break;
         default:
             break;
         
     }
+}
+
+function drawStats(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = rects.btnStats1.hover?bgDarkColor:bgColor;
+	ctx.roundRect(rects.btnStats1.x, rects.btnStats1.y, rects.btnStats1.w, rects.btnStats1.h, 5, true, false);
+    
+    ctx.font = "1.5rem VT323";
+    ctx.textAlign="center"; 
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Back to menu", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height-btnHeight-20+(btnHeight/2));
+    
+    // Moyenne
+    ctx.font = "1.5rem VT323";
+    ctx.textAlign="left"; 
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Moyenne : "+arrondiAuCentième(moyenne([5, 1, 1, 1, 5])), 20,20);
+    //Ecart type
+    ctx.fillText("Ecart type : "+arrondiAuCentième(ecartType([5, 1, 1, 1, 5])), 20,40);
+    //Ecart moyen
+    ctx.fillText("Ecart moyen : "+arrondiAuCentième(ecartMoyen([5, 1, 1, 1, 5])), 20,60);
+    //Ecart moyen
+    ctx.fillText("Histogramme binomiale:", 20,80);
+    higher = 0;
+    for(var key in stats){
+        if(stats[key]>higher){
+            higher = stats[key];
+        }
+    }
+    ctx.beginPath();
+    for(i=0; i<higher; i++){
+        ctx.moveTo(20, 100+i*5);
+        ctx.lineTo(canvas.width - 20, 100+i*5);
+        ctx.strokeStyle = "rgb(175,175,175)";
+        ctx.stroke();
+    }
+    j=0;
+    widthValue = (canvas.width-40)/Object.keys(stats).length;
+    console.log(widthValue);
+    for(var key in stats){
+        ctx.textAlign="center";
+        textWidth = ctx.measureText(key).width;
+        ctx.fillStyle = "#fff";
+        ctx.fillText(key, 20+widthValue*j+(widthValue/2),100+i*5+20);
+        
+        ctx.fillStyle = "rgb(100,100,100)";
+        ctx.fillRect(20+widthValue*j+widthValue/4,100+higher*5-stats[key]*5,widthValue/2,stats[key]*5);
+        j++;
+    }
+}
+
+function arrondiAuCentième(nb){
+    arrondi = nb*100;
+    arrondi = Math.round(arrondi);
+    arrondi = arrondi/100;
+    return arrondi;
 }
 
 canvas.onmousemove = function(e) {
@@ -560,7 +652,8 @@ canvas.onmousemove = function(e) {
             }else{
                 rects[r].hover=false;
             }
-            drawMenu();
+            //drawMenu();
+            changeScreen();
         }
     }
 
@@ -666,4 +759,4 @@ var obj = arrayToObject([5, 1, 1, 1, 5])
 console.log(obj);
 //document.getElementById('out').innerHTML = print(obj);
 console.log(stats);
-document.getElementById('out').innerHTML = print(stats);
+//document.getElementById('out').innerHTML = print(stats);
