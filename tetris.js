@@ -670,6 +670,9 @@ function drawStatsUniforme(){
     
     // Variance uniforme
     drawStat("Variance uniforme :", arrondiAuCentième(Math.pow(bornesUniforme[1]-bornesUniforme[0], 2)/12), 60);
+    
+    // Densité de probabilité
+    drawStat("Densité de probabilité :", arrondiAuCentième(1/(bornesUniforme[1]-bornesUniforme[0]))+" sur ["+bornesUniforme[0]+", "+bornesUniforme[1]+"]", 100);
 }
 
 function drawStatsBinomiale(){
