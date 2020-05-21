@@ -574,6 +574,19 @@ function changeScreen(){
     }
 }
 
+function drawStat(title, value, y){
+    ctx.font = "1.5rem VT323";
+    ctx.textAlign="left"; 
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff";
+    if(ctx.measureText(title+" "+value).width <= canvas.width-40){
+        ctx.fillText(title+" "+value,20,y);
+    }else{
+        ctx.fillText(title,20,y);
+        ctx.fillText(value, 20,y+20);
+    }
+}
+
 function drawStats(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
     ctx.fillStyle = "rgba(255,255,255, 0.7)";
@@ -582,32 +595,29 @@ function drawStats(){
     drawAllBtn(rectsStats);
     
     // Moyenne
-    ctx.font = "1.5rem VT323";
-    ctx.textAlign="left"; 
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Moyenne : "+arrondiAuCentième(moyenne([5, 1, 1, 1, 5])), 20,20);
+    drawStat("Moyenne :", arrondiAuCentième(moyenne([5, 1, 1, 1, 5])), 20);
+    
     //Ecart type
-    ctx.fillText("Ecart type : "+arrondiAuCentième(ecartType([5, 1, 1, 1, 5])), 20,40);
+    drawStat("Ecart type :", arrondiAuCentième(ecartType([5, 1, 1, 1, 5])), 40);
+    
     //Ecart moyen
-    ctx.fillText("Ecart moyen : "+arrondiAuCentième(ecartMoyen([5, 1, 1, 1, 5])), 20,60);
+    drawStat("Ecart moyen :", arrondiAuCentième(ecartMoyen([5, 1, 1, 1, 5])), 60);
+    
     //Histogramme
     barChartHeight = barChart("Histogramme binomiale:", 80, stats);
 
-    ctx.textAlign="left";
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Espérance binomiale :", 20, barChartHeight+20);
-   esperance = arrondiAuCentième(pieces.length*binomialeInput.value/10);
-    
-    inf = (Math.round(esperance)-1>=0 && Math.round(esperance)-1<pieces.length)?Object.getOwnPropertyNames(stats)[Math.round(esperance)-1]:"";
-    sup = (Math.round(esperance)+1>=0 && Math.round(esperance)+1<pieces.length)?Object.getOwnPropertyNames(stats)[Math.round(esperance)+1]:"";
+    // Esperance
+    esperance = arrondiAuCentième(pieces.length*binomialeInput.value/10);
+    inf = (Math.ceil(esperance)-1>=0 && Math.ceil(esperance)-1<pieces.length)?Object.getOwnPropertyNames(stats)[Math.ceil(esperance)-1]:"";
+    sup = (Math.ceil(esperance)>=0 && Math.ceil(esperance)<pieces.length)?Object.getOwnPropertyNames(stats)[Math.ceil(esperance)]:"";
     separator = (inf.length>0 && sup.length>0)?"-":"";
-    ctx.fillText(esperance+" ("+inf+separator+sup+")", 20,barChartHeight+40);
     
+    drawStat("Espérance binomiale :", esperance+" ("+inf+separator+sup+")", barChartHeight+20);    
     
-    ctx.fillText("Variance binomiale :", 20, barChartHeight+60);
-   variance = arrondiAuCentième(pieces.length*binomialeInput.value/10*(1-binomialeInput.value/10));
-    ctx.fillText(variance, 20,barChartHeight+80);
+    // Variance
+    variance = arrondiAuCentième(pieces.length*binomialeInput.value/10*(1-binomialeInput.value/10));
+    drawStat("Variance binomiale :", variance, barChartHeight+60);
+   
 }
 
 function drawBtn(btn, text){
