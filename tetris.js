@@ -27,27 +27,27 @@ btnHeight=50;
 activeScreen = "menu";
 rectsGame = null;
 rectsMenu = {
-    btnMenu1:{x: (canvas.width-btnWidth)/2, y: canvas.height/3-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+    btnMenu1:{x: (canvas.width-btnWidth)/2, y: canvas.height/3-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Jouer", click: function(){
         activeScreen="game";
         changeScreen();
     }},
-    btnMenu2:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3+20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+    btnMenu2:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3+20, w: btnWidth, h: btnHeight, hover:false, text:"Stats", click: function(){
         activeScreen="stats";
         changeScreen();
     }},
-    btnMenu3:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3*2+20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+    btnMenu3:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3*2+20, w: btnWidth, h: btnHeight, hover:false, text:"Résultats", click: function(){
         activeScreen="results";
         changeScreen();
     }}
 }
 rectsStats = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
         activeScreen="menu";
         changeScreen();
     }}
 }
 rectsResults = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
         activeScreen="menu";
         changeScreen();
     }}
@@ -316,24 +316,7 @@ function drawMenu() {
     ctx.fillStyle = "rgba(255,255,255, 0.7)";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    ctx.fillStyle = rects.btnMenu1.hover?bgDarkColor:bgColor;
-	ctx.roundRect(rects.btnMenu1.x, rects.btnMenu1.y, rects.btnMenu1.w, rects.btnMenu1.h, 5, true, false);
-    
-    ctx.font = "1.5rem VT323";
-    ctx.textAlign="center"; 
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Play", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/3-btnHeight-20+(btnHeight/2));
-    
-    ctx.fillStyle = rects.btnMenu2.hover?bgDarkColor:bgColor;
-	ctx.roundRect(rects.btnMenu2.x, rects.btnMenu2.y, rects.btnMenu2.w, rects.btnMenu2.h, 5, true, false);
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Stats", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/3+20+(btnHeight/2));
-    
-    ctx.fillStyle = rects.btnMenu3.hover?bgDarkColor:bgColor;
-	ctx.roundRect(rects.btnMenu3.x, rects.btnMenu3.y, rects.btnMenu3.w, rects.btnMenu3.h, 5, true, false);
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Results", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height/3*2+20+(btnHeight/2));
+    drawAllBtn(rectsMenu);
 }
 
 function drawBoard() {
@@ -596,14 +579,7 @@ function drawStats(){
     ctx.fillStyle = "rgba(255,255,255, 0.7)";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    ctx.fillStyle = rects.btnStats1.hover?bgDarkColor:bgColor;
-	ctx.roundRect(rects.btnStats1.x, rects.btnStats1.y, rects.btnStats1.w, rects.btnStats1.h, 5, true, false);
-    
-    ctx.font = "1.5rem VT323";
-    ctx.textAlign="center"; 
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Retour", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height-btnHeight-20+(btnHeight/2));
+    drawAllBtn(rectsStats);
     
     // Moyenne
     ctx.font = "1.5rem VT323";
@@ -634,20 +610,29 @@ function drawStats(){
     ctx.fillText(variance, 20,barChartHeight+80);
 }
 
+function drawBtn(btn, text){
+    ctx.fillStyle = btn.hover?bgDarkColor:bgColor;
+	ctx.roundRect(btn.x, btn.y, btn.w, btn.h, 5, true, false);
+    
+    ctx.font = "1.5rem VT323";
+    ctx.textAlign="center"; 
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff";
+    ctx.fillText(btn.text, (canvas.width-btn.w)/2+(btn.w/2),btn.y+btn.h-(btn.h/2));
+}
+
+function drawAllBtn(allBtn){
+    for(var key in allBtn){
+        drawBtn(allBtn[key]);
+    }
+}
 
 function drawResults(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
     ctx.fillStyle = "rgba(255,255,255, 0.7)";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    ctx.fillStyle = rects.btnStats1.hover?bgDarkColor:bgColor;
-	ctx.roundRect(rects.btnStats1.x, rects.btnStats1.y, rects.btnStats1.w, rects.btnStats1.h, 5, true, false);
-    
-    ctx.font = "1.5rem VT323";
-    ctx.textAlign="center"; 
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Retour", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height-btnHeight-20+(btnHeight/2));
+    drawAllBtn(rectsResults);
     
     // Lines
     ctx.font = "1.5rem VT323";
