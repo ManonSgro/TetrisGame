@@ -41,8 +41,38 @@ rectsMenu = {
     }}
 }
 rectsStats = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: 20, w: btnWidth, h: btnHeight, hover:false, text:"Moyenne", click: function(){
+        activeScreen="statsMoyenne";
+        changeScreen();
+    }},
+    btnStats2:{x: (canvas.width-btnWidth)/2, y: 40+btnHeight, w: btnWidth, h: btnHeight, hover:false, text:"Uniforme", click: function(){
+        activeScreen="statsUniforme";
+        changeScreen();
+    }},
+    btnStats3:{x: (canvas.width-btnWidth)/2, y: 60+btnHeight*2, w: btnWidth, h: btnHeight, hover:false, text:"Binomiale", click: function(){
+        activeScreen="statsBinomiale";
+        changeScreen();
+    }},
+    btnStats4:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
         activeScreen="menu";
+        changeScreen();
+    }}
+}
+rectsStatsUniforme = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+        activeScreen="stats";
+        changeScreen();
+    }}
+}
+rectsStatsBinomiale = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+        activeScreen="stats";
+        changeScreen();
+    }}
+}
+rectsStatsMoyenne = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+        activeScreen="stats";
         changeScreen();
     }}
 }
@@ -510,7 +540,7 @@ function poisson_distributionApplication(p){
 	}
 }
 
-
+bornesUniforme = [-1,3];
 
 bernoulliApplication(0.5);
 hypergeometriqueApplication(2,5,26,52);
@@ -563,6 +593,21 @@ function changeScreen(){
             rects = rectsStats;
             drawStats();
             break;
+        case "statsMoyenne":
+            linecount.textContent = "";
+            rects = rectsStatsMoyenne;
+            drawStatsMoyenne();
+            break;
+        case "statsUniforme":
+            linecount.textContent = "";
+            rects = rectsStatsUniforme;
+            drawStatsUniforme();
+            break;
+        case "statsBinomiale":
+            linecount.textContent = "";
+            rects = rectsStatsBinomiale;
+            drawStatsBinomiale();
+            break;
         case "results":
             linecount.textContent = "";
             rects = rectsResults;
@@ -593,6 +638,15 @@ function drawStats(){
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     drawAllBtn(rectsStats);
+   
+}
+
+function drawStatsMoyenne(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawAllBtn(rectsStatsMoyenne);
     
     // Moyenne
     drawStat("Moyenne :", arrondiAuCentième(moyenne([5, 1, 1, 1, 5])), 20);
@@ -602,9 +656,31 @@ function drawStats(){
     
     //Ecart moyen
     drawStat("Ecart moyen :", arrondiAuCentième(ecartMoyen([5, 1, 1, 1, 5])), 60);
+}
+
+function drawStatsUniforme(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawAllBtn(rects);
+    
+    // Esperance uniforme
+    drawStat("Esperance uniforme :", arrondiAuCentième((bornesUniforme[0]+bornesUniforme[1])/2), 20);
+    
+    // Variance uniforme
+    drawStat("Variance uniforme :", arrondiAuCentième(Math.pow(bornesUniforme[1]-bornesUniforme[0], 2)/12), 60);
+}
+
+function drawStatsBinomiale(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawAllBtn(rects);
     
     //Histogramme
-    barChartHeight = barChart("Histogramme binomiale:", 80, stats);
+    barChartHeight = barChart("Histogramme binomiale:", 20, stats);
 
     // Esperance
     esperance = arrondiAuCentième(pieces.length*binomialeInput.value/10);
@@ -617,7 +693,6 @@ function drawStats(){
     // Variance
     variance = arrondiAuCentième(pieces.length*binomialeInput.value/10*(1-binomialeInput.value/10));
     drawStat("Variance binomiale :", variance, barChartHeight+60);
-   
 }
 
 function drawBtn(btn, text){
