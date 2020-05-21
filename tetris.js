@@ -645,11 +645,7 @@ function drawResults(){
     drawAllBtn(rectsResults);
     
     // Lines
-    ctx.font = "1.5rem VT323";
-    ctx.textAlign="left"; 
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Lines : "+lines, 20,20);
+    drawStat("Lines :", lines, 20);
     
     //Histogramme prévu
     barChartHeight = barChart("Histogramme prévu:", 60, stats);
