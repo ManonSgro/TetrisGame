@@ -405,33 +405,10 @@ function binomialeChangeStats(binomialeVariable){
         stats[key] = probaBinomiale(binomialeVariable, pieces.length, i)*100;
         i++;
     }
+    for(var key in statsReels){
+        statsReels[key] = 0;
+    }
     changeScreen();
-    /*for(i=0;i<100;i++){
-        piece = pieces[binomiale(binomialeVariable, pieces.length)];
-        switch (piece[0]){
-            case I:
-                stats.I++;
-                break;
-            case J:
-                stats.J++;
-                break;
-            case L:
-                stats.L++;
-                break;
-            case O:
-                stats.O++;
-                break;
-            case S:
-                stats.S++;
-                break;
-            case T:
-                stats.T++;
-                break;
-            case Z:
-                stats.Z++;
-                break;
-        }
-    }*/
 }
 
 function bernoulli(p) {
@@ -577,7 +554,7 @@ for(const prop in stats){
 }
 
 function changeScreen(){
-    console.log(statsReels);
+    //console.log(statsReels);
     ctx.clearRect(0,0,canvas.width, canvas.height);
     switch(activeScreen){
         case "menu":
@@ -626,7 +603,7 @@ function drawStats(){
     ctx.textAlign="center"; 
     ctx.textBaseline = "middle";
     ctx.fillStyle = "#fff";
-    ctx.fillText("Back to menu", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height-btnHeight-20+(btnHeight/2));
+    ctx.fillText("Retour", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height-btnHeight-20+(btnHeight/2));
     
     // Moyenne
     ctx.font = "1.5rem VT323";
@@ -638,49 +615,23 @@ function drawStats(){
     ctx.fillText("Ecart type : "+arrondiAuCentième(ecartType([5, 1, 1, 1, 5])), 20,40);
     //Ecart moyen
     ctx.fillText("Ecart moyen : "+arrondiAuCentième(ecartMoyen([5, 1, 1, 1, 5])), 20,60);
-    //Ecart moyen
-    ctx.fillText("Histogramme binomiale:", 20,80);
-    higher = 0;
-    for(var key in stats){
-        if(stats[key]>higher){
-            higher = stats[key];
-        }
-    }
-    ctx.beginPath();
-    for(i=0; i<higher; i++){
-        ctx.moveTo(20, 100+i*5);
-        ctx.lineTo(canvas.width - 20, 100+i*5);
-        ctx.strokeStyle = "rgb(175,175,175)";
-        ctx.stroke();
-    }
-    j=0;
-    widthValue = (canvas.width-40)/Object.keys(stats).length;
-    console.log(widthValue);
-    for(var key in stats){
-        ctx.textAlign="center";
-        textWidth = ctx.measureText(key).width;
-        ctx.fillStyle = "#fff";
-        ctx.fillText(key, 20+widthValue*j+(widthValue/2),100+i*5+20);
-        
-        ctx.fillStyle = "rgb(100,100,100)";
-        ctx.fillRect(20+widthValue*j+widthValue/4,100+higher*5-stats[key]*5,widthValue/2,stats[key]*5);
-        j++;
-    }
-    var arrayStats = Object.keys(stats).map(function (key) { return stats[key]; });
+    //Histogramme
+    barChartHeight = barChart("Histogramme binomiale:", 80, stats);
+
     ctx.textAlign="left";
     ctx.fillStyle = "#fff";
-    ctx.fillText("Espérance binomiale :", 20, 100+i*5+50);
+    ctx.fillText("Espérance binomiale :", 20, barChartHeight+20);
    esperance = arrondiAuCentième(pieces.length*binomialeInput.value/10);
     
     inf = (Math.round(esperance)-1>=0 && Math.round(esperance)-1<pieces.length)?Object.getOwnPropertyNames(stats)[Math.round(esperance)-1]:"";
     sup = (Math.round(esperance)+1>=0 && Math.round(esperance)+1<pieces.length)?Object.getOwnPropertyNames(stats)[Math.round(esperance)+1]:"";
     separator = (inf.length>0 && sup.length>0)?"-":"";
-    ctx.fillText(esperance+" ("+inf+separator+sup+")", 20,100+i*5+70);
+    ctx.fillText(esperance+" ("+inf+separator+sup+")", 20,barChartHeight+40);
     
     
-    ctx.fillText("Variance binomiale :", 20, 100+i*5+90);
+    ctx.fillText("Variance binomiale :", 20, barChartHeight+60);
    variance = arrondiAuCentième(pieces.length*binomialeInput.value/10*(1-binomialeInput.value/10));
-    ctx.fillText(variance, 20,100+i*5+110);
+    ctx.fillText(variance, 20,barChartHeight+80);
 }
 
 
@@ -696,7 +647,7 @@ function drawResults(){
     ctx.textAlign="center"; 
     ctx.textBaseline = "middle";
     ctx.fillStyle = "#fff";
-    ctx.fillText("Back to menu", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height-btnHeight-20+(btnHeight/2));
+    ctx.fillText("Retour", (canvas.width-btnWidth)/2+(btnWidth/2),canvas.height-btnHeight-20+(btnHeight/2));
     
     // Lines
     ctx.font = "1.5rem VT323";
@@ -705,66 +656,50 @@ function drawResults(){
     ctx.fillStyle = "#fff";
     ctx.fillText("Lines : "+lines, 20,20);
     
-    //Histogramme
-    ctx.textAlign="left";
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Histogramme prévu:", 20,80);
-    higher = 0;
-    for(var key in stats){
-        if(stats[key]>higher){
-            higher = stats[key];
-        }
-    }
-    ctx.beginPath();
-    for(i=0; i<higher; i++){
-        ctx.moveTo(20, 100+i*5);
-        ctx.lineTo(canvas.width - 20, 100+i*5);
-        ctx.strokeStyle = "rgb(175,175,175)";
-        ctx.stroke();
-    }
-    j=0;
-    widthValue = (canvas.width-40)/Object.keys(stats).length;
-    console.log(widthValue);
-    for(var key in stats){
-        ctx.textAlign="center";
-        textWidth = ctx.measureText(key).width;
-        ctx.fillStyle = "#fff";
-        ctx.fillText(key, 20+widthValue*j+(widthValue/2),100+i*5+20);
-        
-        ctx.fillStyle = "rgb(100,100,100)";
-        ctx.fillRect(20+widthValue*j+widthValue/4,100+higher*5-stats[key]*5,widthValue/2,stats[key]*5);
-        j++;
-    }
+    //Histogramme prévu
+    barChartHeight = barChart("Histogramme prévu:", 60, stats);
     
     //Histogramme réel
+    barChart("Histogramme réel:", barChartHeight+20, statsReels);
+}
+
+function barChart(title, y, data){
     ctx.textAlign="left";
     ctx.fillStyle = "#fff";
-    ctx.fillText("Histogramme réel:", 20,100+i*5+60);
-    higher = 0;
-    for(var key in stats){
-        if(statsReels[key]>higher){
-            higher = statsReels[key];
+    ctx.fillText(title, 20,y);
+    
+    if(Object.values(data).reduce((a, b) => a + b) <=0){
+        ctx.fillText("Pas de données de jeu", 20,y+20);
+        return 40;
+    }else{
+        higher = 0;
+        for(var key in data){
+            if(data[key]>higher){
+                higher = data[key];
+            }
         }
+        ctx.beginPath();
+        for(i=0; i<higher; i++){
+            ctx.moveTo(20, y+20+i*5);
+            ctx.lineTo(canvas.width - 20, y+20+i*5);
+            ctx.strokeStyle = "rgb(175,175,175)";
+            ctx.stroke();
+        }
+        j=0;
+        widthValue = (canvas.width-40)/Object.keys(data).length;
+        for(var key in data){
+            ctx.textAlign="center";
+            textWidth = ctx.measureText(key).width;
+            ctx.fillStyle = "#fff";
+            ctx.fillText(key, 20+widthValue*j+(widthValue/2),y+20+i*5+20);
+
+            ctx.fillStyle = "rgb(100,100,100)";
+            ctx.fillRect(20+widthValue*j+widthValue/4,y+20+higher*5-data[key]*5,widthValue/2,data[key]*5);
+            j++;
+        }
+        return y+20+i*5+40;
     }
-    ctx.beginPath();
-    for(i=0; i<higher; i++){
-        ctx.moveTo(20, 320+i*5);
-        ctx.lineTo(canvas.width - 20, 320+i*5);
-        ctx.strokeStyle = "rgb(175,175,175)";
-        ctx.stroke();
-    }
-    j=0;
-    widthValue = (canvas.width-40)/Object.keys(statsReels).length;
-    for(var key in statsReels){
-        ctx.textAlign="center";
-        textWidth = ctx.measureText(key).width;
-        ctx.fillStyle = "#fff";
-        ctx.fillText(key, 20+widthValue*j+(widthValue/2),320+i*5+20);
-        
-        ctx.fillStyle = "rgb(100,100,100)";
-        ctx.fillRect(20+widthValue*j+widthValue/4,320+higher*5-statsReels[key]*5,widthValue/2,statsReels[key]*5);
-        j++;
-    }
+    
 }
 
 function arrondiAuCentième(nb){
