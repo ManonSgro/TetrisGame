@@ -53,7 +53,11 @@ rectsStats = {
         activeScreen="statsBinomiale";
         changeScreen();
     }},
-    btnStats4:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats4:{x: (canvas.width-btnWidth)/2, y: 80+btnHeight*3, w: btnWidth, h: btnHeight, hover:false, text:"Poisson", click: function(){
+        activeScreen="statsPoisson";
+        changeScreen();
+    }},
+    btnStats5:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
         activeScreen="menu";
         changeScreen();
     }}
@@ -65,6 +69,12 @@ rectsStatsUniforme = {
     }}
 }
 rectsStatsBinomiale = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+        activeScreen="stats";
+        changeScreen();
+    }}
+}
+rectsStatsPoisson = {
     btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
         activeScreen="stats";
         changeScreen();
@@ -530,6 +540,16 @@ function poisson_distribution(lambda){
     
 }
 
+function poisson_distributionProba(k, lambda){
+    var numerator = Math.pow(lambda, k);
+    var denominator = 1;
+    for(j=1;j<k;j++){
+        denominator = denominator*j;
+    }
+    return (numerator/denominator)*(Math.exp(-lambda));
+    
+}
+
 function poisson_distributionApplication(p){
 	if (poisson_distribution(p) < 7){
 		document.getElementById("subtitle").innerHTML = "Tu n’as pas échoué tant que tu continues d'essayer !";
@@ -540,7 +560,40 @@ function poisson_distributionApplication(p){
 	}
 }
 
+statsPoisson = {
+    "1":0,
+    "2":0,
+    "3":0,
+    "4":0,
+    "5":0,
+    "6":0
+};
+
+function poissonChangeStats(poissonVariable){
+    i=0;
+    for(var key in statsPoisson){
+        statsPoisson[key] = poisson_distributionProba(i, poissonVariable)*10;
+        i++;
+    }
+    
+    poissonDistributionParameter = poissonVariable;
+    changeScreen();
+}
+
 bornesUniforme = [-1,3];
+//poissonPossibilities
+poissonDistributionParameter = 6;
+let poissonInput = document.querySelector('#poissonInput'),
+    poissonParameterValue = document.querySelector('.poissonParameterValue');
+
+poissonParameterValue.innerHTML = poissonInput.value;
+poissonChangeStats(poissonInput.value);
+
+poissonInput.addEventListener('input', function () {
+  poissonParameterValue.innerHTML = poissonInput.value;
+  poissonChangeStats(poissonInput.value);
+    
+}, false);
 
 bernoulliApplication(0.5);
 hypergeometriqueApplication(2,5,26,52);
@@ -607,6 +660,11 @@ function changeScreen(){
             linecount.textContent = "";
             rects = rectsStatsBinomiale;
             drawStatsBinomiale();
+            break;
+        case "statsPoisson":
+            linecount.textContent = "";
+            rects = rectsStatsPoisson;
+            drawStatsPoisson();
             break;
         case "results":
             linecount.textContent = "";
@@ -696,6 +754,29 @@ function drawStatsBinomiale(){
     // Variance
     variance = arrondiAuCentième(pieces.length*binomialeInput.value/10*(1-binomialeInput.value/10));
     drawStat("Variance binomiale :", variance, barChartHeight+60);
+}
+
+function drawStatsPoisson(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawAllBtn(rects);
+    
+    // Parametre
+    drawStat("Paramètre :", poissonDistributionParameter, 20);
+    
+    // Bar chart
+    barChartHeight = barChart("Histogramme poisson:", 40, statsPoisson);
+    
+    // Esperance
+    drawStat("Esperance :", poissonDistributionParameter, barChartHeight+20);
+    
+    // Variance
+    drawStat("Variance :", poissonDistributionParameter, barChartHeight+40);
+    
+    // Ecart-type
+    drawStat("Ecart-type :", arrondiAuCentième(Math.sqrt(poissonDistributionParameter)), barChartHeight+60);
 }
 
 function drawBtn(btn, text){
