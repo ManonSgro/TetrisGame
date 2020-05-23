@@ -87,11 +87,34 @@ rectsStatsMoyenne = {
     }}
 }
 rectsResults = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: 20, w: btnWidth, h: btnHeight, hover:false, text:"Binomiale", click: function(){
+        activeScreen="resultsBinomiale";
+        changeScreen();
+    }},
+    btnStats2:{x: (canvas.width-btnWidth)/2, y: 40+btnHeight, w: btnWidth, h: btnHeight, hover:false, text:"Poisson", click: function(){
+        activeScreen="resultsPoisson";
+        changeScreen();
+    }},
+    btnStats3:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
         activeScreen="menu";
         changeScreen();
     }}
 }
+
+rectsResultsBinomiale = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+        activeScreen="results";
+        changeScreen();
+    }}
+}
+
+rectsResultsPoisson = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+        activeScreen="results";
+        changeScreen();
+    }}
+}
+
 rects = null;
 
 statsReels = {
@@ -104,13 +127,47 @@ statsReels = {
     Z:0
 }
 
+function weightedRand(spec) {
+  var i, j, table=[];
+  for (i in spec) {
+    // The constant 10 below should be computed based on the
+    // weights in the spec for a correct and optimal table size.
+    // E.g. the spec {0:0.999, 1:0.001} will break this impl.
+    for (j=0; j<spec[i]*10; j++) {
+      table.push(i);
+    }
+  }
+  return function() {
+    return table[Math.floor(Math.random() * table.length)];
+  }
+}
+
+/*function weightedRand(spec) {
+  var i, sum=0, r=Math.random();
+  for (i in spec) {
+    sum += spec[i];
+    if (r <= sum) return i;
+  }
+}*/
+
 function newPiece() {
 	//var p = pieces[parseInt(Math.random() * pieces.length, 10)];
     //var p = pieces[binomiale(0.5, pieces.length)]; 
     res = binomiale(binomialeInput.value/10, pieces.length);
     var p = pieces[res];
     statsReels[Object.getOwnPropertyNames(statsReels)[res]]++;
-	return new Piece(p[0], p[1]);
+	//return new Piece(p[0], p[1]);
+    randomColor = poisson_distribution(poissonDistributionParameter-1);
+    console.log(randomColor);
+    if(randomColor>Object.keys(statsPoisson).length-1){
+        randomColor = Object.keys(statsPoisson).length-1;
+    }
+    if(randomColor<0){
+        randomColor = 0;
+    }
+    statsPoissonReel[Object.keys(statsPoisson)[randomColor]]++;
+    console.log(statsPoissonReel);
+    return new Piece(p[0], Object.keys(statsPoisson)[randomColor]);
 }
 
 function drawSquare(x, y) {
@@ -561,19 +618,33 @@ function poisson_distributionApplication(p){
 }
 
 statsPoisson = {
-    "1":0,
-    "2":0,
-    "3":0,
-    "4":0,
-    "5":0,
-    "6":0
+    "cyan":0,
+    "blue":0,
+    "orange":0,
+    "yellow":0,
+    "green":0,
+    "purple":0,
+    "red":0
+};
+
+statsPoissonReel = {
+    "cyan":0,
+    "blue":0,
+    "orange":0,
+    "yellow":0,
+    "green":0,
+    "purple":0,
+    "red":0
 };
 
 function poissonChangeStats(poissonVariable){
     i=0;
     for(var key in statsPoisson){
-        statsPoisson[key] = poisson_distributionProba(i, poissonVariable)*10;
+        statsPoisson[key] = poisson_distributionProba(i, poissonVariable);
         i++;
+    }
+    for(var key in statsPoissonReel){
+        statsPoissonReel[key] = 0;
     }
     
     poissonDistributionParameter = poissonVariable;
@@ -670,6 +741,16 @@ function changeScreen(){
             linecount.textContent = "";
             rects = rectsResults;
             drawResults();
+            break;
+        case "resultsBinomiale":
+            linecount.textContent = "";
+            rects = rectsResultsBinomiale;
+            drawResultsBinomiale();
+            break;
+        case "resultsPoisson":
+            linecount.textContent = "";
+            rects = rectsResultsPoisson;
+            drawResultsPoisson();
             break;
         default:
             break;
@@ -802,6 +883,14 @@ function drawResults(){
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     drawAllBtn(rectsResults);
+}
+
+function drawResultsBinomiale(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawAllBtn(rects);
     
     // Lines
     drawStat("Lines :", lines, 20);
@@ -811,6 +900,23 @@ function drawResults(){
     
     //Histogramme réel
     barChart("Histogramme réel:", barChartHeight+20, statsReels);
+}
+
+function drawResultsPoisson(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawAllBtn(rects);
+    
+    // Lines
+    drawStat("Lines :", lines, 20);
+    
+    //Histogramme prévu
+    barChartHeight = barChart("Histogramme prévu:", 60, statsPoisson);
+    
+    //Histogramme réel
+    barChart("Histogramme réel:", barChartHeight+20, statsPoissonReel);
 }
 
 function barChart(title, y, data){
@@ -823,9 +929,19 @@ function barChart(title, y, data){
         return 40;
     }else{
         higher = 0;
+        adjustment = 1;
+        tooSmall = 1;
         for(var key in data){
-            if(data[key]>higher){
-                higher = data[key];
+            if(data[key]<1){
+                tooSmall++;
+            }
+        }
+        if(tooSmall>=Object.keys(data).length){
+            adjustment = 10;
+        }
+        for(var key in data){
+            if(data[key]*adjustment>higher){
+                higher = data[key]*adjustment;
             }
         }
         ctx.beginPath();
@@ -837,17 +953,29 @@ function barChart(title, y, data){
         }
         j=0;
         widthValue = (canvas.width-40)/Object.keys(data).length;
+        
+        legendHeight = 0;
         for(var key in data){
             ctx.textAlign="center";
             textWidth = ctx.measureText(key).width;
             ctx.fillStyle = "#fff";
-            ctx.fillText(key, 20+widthValue*j+(widthValue/2),y+20+i*5+20);
+            if(textWidth>widthValue){
+                for(k=0; k<key.length; k++){
+                    ctx.fillText(key[k], 20+widthValue*j+(widthValue/2),y+20+i*5+20+20*k);
+                }
+                if(legendHeight<k){
+                    legendHeight=k;                    
+                }
+            }else{
+                ctx.fillText(key, 20+widthValue*j+(widthValue/2),y+20+i*5+20);
+            }
+            
 
             ctx.fillStyle = "rgb(100,100,100)";
-            ctx.fillRect(20+widthValue*j+widthValue/4,y+20+higher*5-data[key]*5,widthValue/2,data[key]*5);
+            ctx.fillRect(20+widthValue*j+widthValue/4,y+20+higher*5-data[key]*5*adjustment,widthValue/2,data[key]*5*adjustment);
             j++;
         }
-        return y+20+i*5+40;
+        return y+20+i*5+40+legendHeight*20;
     }
     
 }
