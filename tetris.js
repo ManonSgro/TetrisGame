@@ -166,7 +166,6 @@ function newPiece() {
         randomColor = 0;
     }
     statsPoissonReel[Object.keys(statsPoisson)[randomColor]]++;
-    console.log(statsPoissonReel);
     return new Piece(p[0], Object.keys(statsPoisson)[randomColor]);
 }
 
@@ -692,13 +691,27 @@ poissonInput.addEventListener('input', function () {
     
 }, false);
 
-bernoulliApplication(0.5);
+bernouilliParameter = 0.5;
+bernoulliApplication(bernouilliParameter);
 hypergeometriqueApplication(2,5,26,52);
 uniformeApplication(-2,3,-1,3);
 poisson_distributionApplication(6);
 
+let bernouilliInput = document.querySelector('#bernouilliInput'),
+    bernouilliParameterValue = document.querySelector('.bernouilliParameterValue');
 
+bernouilliParameterValue.innerHTML = bernouilliInput.value;
+bernouilliChangeStats(bernouilliInput.value);
 
+bernouilliInput.addEventListener('input', function () {
+  bernouilliParameterValue.innerHTML = bernouilliInput.value;
+  bernouilliChangeStats(bernouilliInput.value);
+}, false);
+
+function bernouilliChangeStats(bernouilliVariable){
+    bernoulliApplication(bernouilliVariable);
+    changeScreen();
+}
 
 let binomialeInput = document.querySelector('#binomialeInput'),
     binomialeParameterValue = document.querySelector('.binomialeParameterValue');
