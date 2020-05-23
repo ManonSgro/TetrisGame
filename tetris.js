@@ -1037,10 +1037,12 @@ function drawStatsMoyenne(){
 
 
 statsHypergeometriqueReel = {};
+resultsHypergeometriqueReel = [];
 
 function resetHypergeometriqueReel(){
     hypergeometriqueParameterNReel = 0;
     statsHypergeometriqueReel = {};
+    resultsHypergeometriqueReel = [];
 }
 
 function hypergeometriqueGenerator(p, A){
@@ -1049,12 +1051,10 @@ function hypergeometriqueGenerator(p, A){
     hypergeometriqueRandom = Math.floor(Math.random() * hypergeometriquePossibilities.length);
     res = hypergeometriquePossibilities[hypergeometriqueRandom];
     if(hypergeometriqueParameterNReel<hypergeometriqueParameterN){
+        resultsHypergeometriqueReel.push(res);
+        statsHypergeometriqueReel[hypergeometriqueParameterNReel] = resultsHypergeometriqueReel.filter(el => el=="facile").length/(hypergeometriqueParameterNReel+1);
         hypergeometriqueParameterNReel++;
-        if(statsHypergeometriqueReel[hypergeometriqueRandom]>=1){
-            statsHypergeometriqueReel[hypergeometriqueRandom]++;
-        }else{
-            statsHypergeometriqueReel[hypergeometriqueRandom] = 1;
-        }
+        
         
     }
     console.log(statsHypergeometriqueReel);
