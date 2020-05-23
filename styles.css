@@ -51,7 +51,17 @@ body {
 }
 
 #stats{
-    margin-left: 1rem;
+    margin-left: 1.5rem;
+}
+
+.infos{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#difficulty{
+    padding-right: 1rem;
 }
 
 #board {
@@ -64,7 +74,7 @@ body {
 }
 #lines {
     width: auto;
-    font-size: 1.5em;
+    font-size: 1.5rem;
     text-align: left;
     font-family: 'VT323', monospace;
     font-weight: 100;

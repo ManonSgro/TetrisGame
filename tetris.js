@@ -1,6 +1,7 @@
 var canvas = document.getElementById('board');
 var ctx = canvas.getContext("2d");
 var linecount = document.getElementById('lines');
+var difficultyText = document.getElementById('difficulty');
 var clear = window.getComputedStyle(canvas).getPropertyValue('background-color');
 var width = 10;
 var height = 20;
@@ -27,100 +28,186 @@ btnHeight=50;
 activeScreen = "menu";
 rectsGame = null;
 rectsMenu = {
-    btnMenu1:{x: (canvas.width-btnWidth)/2, y: canvas.height/3-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Jouer", click: function(){
+    btnMenu1:{x: (canvas.width-btnWidth)/2, y: canvas.height/3-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Jouer";
+    }, click: function(){
         activeScreen="game";
         changeScreen();
     }},
-    btnMenu2:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3+20, w: btnWidth, h: btnHeight, hover:false, text:"Stats", click: function(){
+    btnMenu2:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3+20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Stats";
+    }, click: function(){
         activeScreen="stats";
         changeScreen();
     }},
-    btnMenu3:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3*2+20, w: btnWidth, h: btnHeight, hover:false, text:"Résultats", click: function(){
+    btnMenu3:{x:  (canvas.width-btnWidth)/2, y: canvas.height/3*2+20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Résultats";
+    }, click: function(){
         activeScreen="results";
         changeScreen();
     }}
 }
 rectsStats = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: 20, w: btnWidth, h: btnHeight, hover:false, text:"Moyenne", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: 20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Moyenne";
+    }, click: function(){
         activeScreen="statsMoyenne";
         changeScreen();
     }},
-    btnStats2:{x: (canvas.width-btnWidth)/2, y: 40+btnHeight, w: btnWidth, h: btnHeight, hover:false, text:"Uniforme", click: function(){
+    btnStats2:{x: (canvas.width-btnWidth)/2, y: 30+btnHeight, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Uniforme";
+    }, click: function(){
         activeScreen="statsUniforme";
         changeScreen();
     }},
-    btnStats3:{x: (canvas.width-btnWidth)/2, y: 60+btnHeight*2, w: btnWidth, h: btnHeight, hover:false, text:"Binomiale", click: function(){
+    btnStats3:{x: (canvas.width-btnWidth)/2, y: 40+btnHeight*2, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Binomiale";
+    }, click: function(){
         activeScreen="statsBinomiale";
         changeScreen();
     }},
-    btnStats4:{x: (canvas.width-btnWidth)/2, y: 80+btnHeight*3, w: btnWidth, h: btnHeight, hover:false, text:"Poisson", click: function(){
+    btnStats4:{x: (canvas.width-btnWidth)/2, y: 50+btnHeight*3, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Poisson";
+    }, click: function(){
         activeScreen="statsPoisson";
         changeScreen();
     }},
-    btnStats5:{x: (canvas.width-btnWidth)/2, y: 100+btnHeight*4, w: btnWidth, h: btnHeight, hover:false, text:"Bernouilli", click: function(){
+    btnStats5:{x: (canvas.width-btnWidth)/2, y: 60+btnHeight*4, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Bernouilli";
+    }, click: function(){
         activeScreen="statsBernouilli";
         changeScreen();
     }},
-    btnStats6:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats6:{x: (canvas.width-btnWidth)/2, y: 70+btnHeight*5, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Hypergéométrique";
+    }, click: function(){
+        activeScreen="statsHypergeometrique";
+        changeScreen();
+    }},
+    btnStats7:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
         activeScreen="menu";
         changeScreen();
     }}
 }
 rectsStatsUniforme = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
         activeScreen="stats";
         changeScreen();
     }}
 }
 rectsStatsBinomiale = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
         activeScreen="stats";
         changeScreen();
     }}
 }
 rectsStatsPoisson = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
         activeScreen="stats";
         changeScreen();
     }}
 }
 rectsStatsBernouilli = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
         activeScreen="stats";
         changeScreen();
     }}
 }
+activeHypergeometrique = false;
+rectsStatsHypergeometrique = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
+        activeScreen="stats";
+        changeScreen();
+    }},
+    
+    btnStats2:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight*2-40, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        if(activeHypergeometrique){
+            return "Désactiver";
+        }else{
+            return "Activer";
+        }
+    }, click: function(){
+        activeHypergeometrique=!activeHypergeometrique;
+        console.log((activeHypergeometrique)?"Désactiver":"Activer");
+        changeScreen();
+    }}
+}
 rectsStatsMoyenne = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
         activeScreen="stats";
         changeScreen();
     }}
 }
 rectsResults = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: 20, w: btnWidth, h: btnHeight, hover:false, text:"Binomiale", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: 20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Binomiale";
+    }, click: function(){
         activeScreen="resultsBinomiale";
         changeScreen();
     }},
-    btnStats2:{x: (canvas.width-btnWidth)/2, y: 40+btnHeight, w: btnWidth, h: btnHeight, hover:false, text:"Poisson", click: function(){
+    btnStats2:{x: (canvas.width-btnWidth)/2, y: 40+btnHeight, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Poisson";
+    }, click: function(){
         activeScreen="resultsPoisson";
         changeScreen();
     }},
-    btnStats3:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats3:{x: (canvas.width-btnWidth)/2, y: 60+btnHeight*2, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Hypergéométrique";
+    }, click: function(){
+        activeScreen="resultsHypergeometrique";
+        changeScreen();
+    }},
+    btnStats4:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
         activeScreen="menu";
         changeScreen();
     }}
 }
 
 rectsResultsBinomiale = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
         activeScreen="results";
         changeScreen();
     }}
 }
 
 rectsResultsPoisson = {
-    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
         activeScreen="results";
+        changeScreen();
+    }}
+}
+
+rectsResultsHypergeometrique = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Retour";
+    }, click: function(){
+        activeScreen="results";
+        changeScreen();
+    }},
+    btnStats2:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight*2-40, w: btnWidth, h: btnHeight, hover:false, text:function(){
+        return "Reset";
+    }, click: function(){
+        resetHypergeometriqueReel();
         changeScreen();
     }}
 }
@@ -168,7 +255,7 @@ function newPiece() {
     statsReels[Object.getOwnPropertyNames(statsReels)[res]]++;
 	//return new Piece(p[0], p[1]);
     randomColor = poisson_distribution(poissonDistributionParameter-1);
-    console.log(randomColor);
+    //console.log(randomColor);
     if(randomColor>Object.keys(statsPoisson).length-1){
         randomColor = Object.keys(statsPoisson).length-1;
     }
@@ -703,7 +790,62 @@ poissonInput.addEventListener('input', function () {
 
 bernouilliParameter = 0.5;
 bernoulliApplication(bernouilliParameter);
+hypergeometriqueParameter = 0.2;
+hypergeometriqueParameterA = 100;
+hypergeometriqueParameterN = 40;
+hypergeometriqueParameterNReel = 0;
+hypergeometriquePossibilities = [];
+
 hypergeometriqueApplication(2,5,26,52);
+let hypergeometriqueInput = document.querySelector('#hypergeometriqueInput'),
+    hypergeometriqueParameterValue = document.querySelector('.hypergeometriqueParameterValue');
+
+let hypergeometriqueAInput = document.querySelector('#hypergeometriqueAInput'),
+    hypergeometriqueParameterAValue = document.querySelector('.hypergeometriqueParameterAValue');
+
+let hypergeometriqueNInput = document.querySelector('#hypergeometriqueNInput'),
+    hypergeometriqueParameterNValue = document.querySelector('.hypergeometriqueParameterNValue');
+
+hypergeometriqueParameterValue.innerHTML = hypergeometriqueInput.value;
+
+hypergeometriqueParameterAValue.innerHTML = hypergeometriqueAInput.value;
+hypergeometriqueParameterNValue.innerHTML = hypergeometriqueNInput.value;
+
+hypergeometriqueChangeStats(hypergeometriqueInput.value, hypergeometriqueAInput.value, hypergeometriqueNInput.value);
+
+hypergeometriqueInput.addEventListener('input', function () {
+  hypergeometriqueParameterValue.innerHTML = hypergeometriqueInput.value;
+  hypergeometriqueChangeStats(hypergeometriqueInput.value, hypergeometriqueAInput.value, hypergeometriqueNInput.value);
+    
+}, false);
+hypergeometriqueAInput.addEventListener('input', function () {
+  hypergeometriqueParameterAValue.innerHTML = hypergeometriqueAInput.value;
+  hypergeometriqueChangeStats(hypergeometriqueInput.value, hypergeometriqueAInput.value, hypergeometriqueNInput.value);
+    
+}, false);
+hypergeometriqueNInput.addEventListener('input', function () {
+  hypergeometriqueParameterNValue.innerHTML = hypergeometriqueNInput.value;
+  hypergeometriqueChangeStats(hypergeometriqueInput.value, hypergeometriqueAInput.value, hypergeometriqueNInput.value);
+    
+}, false);
+
+function hypergeometriqueChangeStats(hypergeometriqueVariable, hypergeometriqueVariableA, hypergeometriqueVariableN){
+    hypergeometriqueParameter = hypergeometriqueVariable;
+    hypergeometriqueParameterA = hypergeometriqueVariableA;
+    hypergeometriqueParameterN = hypergeometriqueVariableN;
+   hypergeometriquePossibilities=[];
+    for(i=0;i<hypergeometriqueVariableA;i++){
+        if(i<hypergeometriqueVariableA*hypergeometriqueVariable){
+            hypergeometriquePossibilities.push("facile");
+        }else{
+            hypergeometriquePossibilities.push("difficile");
+        }
+
+    }
+    //hypergeometriqueApplication(hypergeometriqueVariable);
+    changeScreen();
+}
+
 uniformeApplication(-2,3,-1,3);
 poisson_distributionApplication(6);
 
@@ -746,6 +888,7 @@ function changeScreen(){
     switch(activeScreen){
         case "menu":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsMenu;
             drawMenu();
             break;
@@ -760,52 +903,92 @@ function changeScreen(){
             piece = newPiece();
             drawBoard();
             linecount.textContent = "Lines: 0";
+            if(activeHypergeometrique){
+                difficulty = hypergeometriqueGenerator(hypergeometriqueParameter, hypergeometriqueParameterA);
+                difficultyText.textContent = "Plus "+difficulty;
+                if(difficulty=="facile"){
+                    if(parseInt(binomialeInput.value)-2>=1){
+                        binomialeInput.value -= 2;
+                    }else{
+                        binomialeInput.value = 1;
+                    }
+                }else{
+                    if((parseInt(binomialeInput.value)+2)>9){
+                        binomialeInput.value = 9;
+                    }else{
+                        binomialeInput.value = (parseInt(binomialeInput.value)+2);
+                    }
+                }
+                binomialeParameterValue.innerHTML = binomialeInput.value/10;
+            }
+            
+            
             main();
             break;
         case "stats":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsStats;
             drawStats();
             break;
         case "statsMoyenne":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsStatsMoyenne;
             drawStatsMoyenne();
             break;
         case "statsUniforme":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsStatsUniforme;
             drawStatsUniforme();
             break;
         case "statsBinomiale":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsStatsBinomiale;
             drawStatsBinomiale();
             break;
         case "statsPoisson":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsStatsPoisson;
             drawStatsPoisson();
             break;
         case "statsBernouilli":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsStatsBernouilli;
             drawStatsBernouilli();
+        case "statsHypergeometrique":
+            linecount.textContent = "";
+            difficultyText.textContent = "";
+            rects = rectsStatsHypergeometrique;
+            drawStatsHypergeometrique();
             break;
         case "results":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsResults;
             drawResults();
             break;
         case "resultsBinomiale":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsResultsBinomiale;
             drawResultsBinomiale();
             break;
         case "resultsPoisson":
             linecount.textContent = "";
+            difficultyText.textContent = "";
             rects = rectsResultsPoisson;
             drawResultsPoisson();
+            break;
+        case "resultsHypergeometrique":
+            linecount.textContent = "";
+            difficultyText.textContent = "";
+            rects = rectsResultsHypergeometrique;
+            drawResultsHypergeometrique();
             break;
         default:
             break;
@@ -850,6 +1033,73 @@ function drawStatsMoyenne(){
     
     //Ecart moyen
     drawStat("Ecart moyen :", arrondiAuCentième(ecartMoyen([5, 1, 1, 1, 5])), 60);
+}
+
+
+statsHypergeometriqueReel = {};
+
+function resetHypergeometriqueReel(){
+    hypergeometriqueParameterNReel = 0;
+    statsHypergeometriqueReel = {};
+}
+
+function hypergeometriqueGenerator(p, A){
+    
+    
+    hypergeometriqueRandom = Math.floor(Math.random() * hypergeometriquePossibilities.length);
+    res = hypergeometriquePossibilities[hypergeometriqueRandom];
+    if(hypergeometriqueParameterNReel<hypergeometriqueParameterN){
+        hypergeometriqueParameterNReel++;
+        if(statsHypergeometriqueReel[hypergeometriqueRandom]>=1){
+            statsHypergeometriqueReel[hypergeometriqueRandom]++;
+        }else{
+            statsHypergeometriqueReel[hypergeometriqueRandom] = 1;
+        }
+        
+    }
+    console.log(statsHypergeometriqueReel);
+    
+    return res;
+}
+
+function drawStatsHypergeometrique(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawAllBtn(rects);
+    
+    // Paramètre p (succès)
+    drawStat("Paramètre p :", arrondiAuCentième(hypergeometriqueParameter), 20);
+    
+    // Paramètre q (echecs)
+    drawStat("Paramètre q :", arrondiAuCentième(1-hypergeometriqueParameter), 40);
+    
+    // Paramètre A (nb de possibilités total)
+    drawStat("Paramètre A :", arrondiAuCentième(hypergeometriqueParameterA), 60);
+    
+    // Paramètre A (nb de tirages)
+    drawStat("Paramètre n :", arrondiAuCentième(hypergeometriqueParameterN), 80);
+    
+    // Esperance
+    drawStat("Esperance :", arrondiAuCentième(hypergeometriqueParameter*hypergeometriqueParameterN), 100);
+    
+    // Variance
+    drawStat("Variance :", arrondiAuCentième(hypergeometriqueParameter*hypergeometriqueParameterN*(1-hypergeometriqueParameter)*((hypergeometriqueParameterA-hypergeometriqueParameterN)/(hypergeometriqueParameterA-1))), 120);
+    
+    // Ecart-type
+    ecartType = Math.sqrt(hypergeometriqueParameterN*hypergeometriqueParameter*hypergeometriqueParameterA)*Math.sqrt((hypergeometriqueParameterA-hypergeometriqueParameterN)/(hypergeometriqueParameterA-1));
+    drawStat("Ecart-type :", arrondiAuCentième(ecartType), 140);
+    
+    // Histogramme
+    statsHypergeometrique = {
+        "0":0,
+    };
+    for(j=0; j<hypergeometriqueParameterN; j++){
+        statsHypergeometrique[j] = hypergeometrique(j, hypergeometriqueParameterN, hypergeometriqueParameter, hypergeometriqueParameterA);
+    }
+    //console.log(statsHypergeometrique);
+    barChart("Histogramme :", 160, statsHypergeometrique);
 }
 
 function drawStatsBernouilli(){
@@ -940,7 +1190,7 @@ function drawBtn(btn, text){
     ctx.textAlign="center"; 
     ctx.textBaseline = "middle";
     ctx.fillStyle = "#fff";
-    ctx.fillText(btn.text, (canvas.width-btn.w)/2+(btn.w/2),btn.y+btn.h-(btn.h/2));
+    ctx.fillText(btn.text(), (canvas.width-btn.w)/2+(btn.w/2),btn.y+btn.h-(btn.h/2));
 }
 
 function drawAllBtn(allBtn){
@@ -989,6 +1239,29 @@ function drawResultsPoisson(){
     
     //Histogramme réel
     barChart("Histogramme réel:", barChartHeight, statsPoissonReel);
+}
+
+function drawResultsHypergeometrique(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawAllBtn(rects);
+    
+    // Lines
+    //drawStat("Lines :", lines, 20);
+    
+    //Histogramme prévu
+    statsHypergeometrique = {
+        "0":0,
+    };
+    for(j=0; j<hypergeometriqueParameterN; j++){
+        statsHypergeometrique[j] = hypergeometrique(j, hypergeometriqueParameterN, hypergeometriqueParameter, hypergeometriqueParameterA);
+    }
+    barChartHeight = barChart("Histogramme prévu:", 20, statsHypergeometrique);
+    
+    //Histogramme réel
+    barChart("Histogramme réel:", barChartHeight+20, statsHypergeometriqueReel);
 }
 
 function barChart(title, y, data){
