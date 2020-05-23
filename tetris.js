@@ -57,7 +57,11 @@ rectsStats = {
         activeScreen="statsPoisson";
         changeScreen();
     }},
-    btnStats5:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+    btnStats5:{x: (canvas.width-btnWidth)/2, y: 100+btnHeight*4, w: btnWidth, h: btnHeight, hover:false, text:"Bernouilli", click: function(){
+        activeScreen="statsBernouilli";
+        changeScreen();
+    }},
+    btnStats6:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
         activeScreen="menu";
         changeScreen();
     }}
@@ -75,6 +79,12 @@ rectsStatsBinomiale = {
     }}
 }
 rectsStatsPoisson = {
+    btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
+        activeScreen="stats";
+        changeScreen();
+    }}
+}
+rectsStatsBernouilli = {
     btnStats1:{x: (canvas.width-btnWidth)/2, y: canvas.height-btnHeight-20, w: btnWidth, h: btnHeight, hover:false, text:"Retour", click: function(){
         activeScreen="stats";
         changeScreen();
@@ -709,6 +719,7 @@ bernouilliInput.addEventListener('input', function () {
 }, false);
 
 function bernouilliChangeStats(bernouilliVariable){
+    bernouilliParameter = bernouilliVariable;
     bernoulliApplication(bernouilliVariable);
     changeScreen();
 }
@@ -776,6 +787,11 @@ function changeScreen(){
             rects = rectsStatsPoisson;
             drawStatsPoisson();
             break;
+        case "statsBernouilli":
+            linecount.textContent = "";
+            rects = rectsStatsBernouilli;
+            drawStatsBernouilli();
+            break;
         case "results":
             linecount.textContent = "";
             rects = rectsResults;
@@ -834,6 +850,23 @@ function drawStatsMoyenne(){
     
     //Ecart moyen
     drawStat("Ecart moyen :", arrondiAuCentième(ecartMoyen([5, 1, 1, 1, 5])), 60);
+}
+
+function drawStatsBernouilli(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255, 0.7)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawAllBtn(rectsStatsMoyenne);
+    
+    // Paramètre
+    drawStat("Paramètre :", arrondiAuCentième(bernouilliParameter), 20);
+    
+    // Esperance
+    drawStat("Esperance :", arrondiAuCentième(bernouilliParameter), 40);
+    
+    // Variance
+    drawStat("Variance :", arrondiAuCentième(bernouilliParameter*(1-bernouilliParameter)), 60);
 }
 
 function drawStatsUniforme(){
