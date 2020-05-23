@@ -185,7 +185,33 @@ function Piece(patterns, color) {
 	this.patterns = patterns;
 	this.patterni = 0;
 
-	this.color = color;
+    switch(color){
+        case "cyan":
+            this.color = "#4dffd5";
+            break;
+        case "blue":
+            this.color = "#4dcfff";
+            break;
+        case "orange":
+            this.color = "#ffd54d";
+            break;
+        case "yellow":
+            this.color = "#ffff4d";
+            break;
+        case "green":
+            this.color = "#9aff4d";
+            break;
+        case "purple":
+            this.color = "#d54dff";
+            break;
+        case "red":
+            this.color = "#ff4d76";
+            break;
+        default:
+            this.color = "#ddd";
+            break;
+    }
+	//this.color = color;
 
 	this.x = width/2-parseInt(Math.ceil(this.pattern.length/2), 10);
 	this.y = -2;
@@ -910,13 +936,13 @@ function drawResultsPoisson(){
     drawAllBtn(rects);
     
     // Lines
-    drawStat("Lines :", lines, 20);
+    //drawStat("Lines :", lines, 20);
     
     //Histogramme prévu
-    barChartHeight = barChart("Histogramme prévu:", 60, statsPoisson);
+    barChartHeight = barChart("Histogramme prévu:", 20, statsPoisson);
     
     //Histogramme réel
-    barChart("Histogramme réel:", barChartHeight+20, statsPoissonReel);
+    barChart("Histogramme réel:", barChartHeight, statsPoissonReel);
 }
 
 function barChart(title, y, data){
@@ -931,13 +957,20 @@ function barChart(title, y, data){
         higher = 0;
         adjustment = 1;
         tooSmall = 1;
+        tooBig = false;
         for(var key in data){
             if(data[key]<1){
                 tooSmall++;
             }
+            if(data[key]>10){
+                tooBig = true;
+            }
         }
         if(tooSmall>=Object.keys(data).length){
             adjustment = 10;
+        }
+        if(tooBig){
+            adjustment = 1/10;
         }
         for(var key in data){
             if(data[key]*adjustment>higher){
