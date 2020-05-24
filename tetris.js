@@ -960,6 +960,7 @@ function changeScreen(){
             difficultyText.textContent = "";
             rects = rectsStatsBernouilli;
             drawStatsBernouilli();
+            break;
         case "statsHypergeometrique":
             linecount.textContent = "";
             difficultyText.textContent = "";
@@ -1107,7 +1108,7 @@ function drawStatsBernouilli(){
     ctx.fillStyle = "rgba(255,255,255, 0.7)";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    drawAllBtn(rectsStatsMoyenne);
+    drawAllBtn(rects);
     
     // Paramètre
     drawStat("Paramètre :", arrondiAuCentième(bernouilliParameter), 20);
