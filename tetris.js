@@ -677,14 +677,20 @@ function hypergeometriqueApplication(k, n, g, t){
 
 // Si X suit une loi uniforme sur [a;b]
 // La probabilité de P(c≤X≤d)
-function uniforme(a,b,c,d){
+function uniformeFonctionDeRepartition(a,b,c,d){
 	return ((d-c)/(b-a));
 }
 
+function uniforme(min, max){
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function uniformeApplication(a,b,c,d){
-	if (uniforme(a,b,c,d) < 0.5){
-		pieces = [
+    res = uniforme(c,d);
+	if (res < b && res > a){
+		/*pieces = [
 			[I, "#2e4d5c"],
 			[J, "#2fb19e"],
 			[L, "#4a94c8"],
@@ -692,10 +698,11 @@ function uniformeApplication(a,b,c,d){
 			[S, "#95ce7b"],
 			[T, "#f5c748"],
 			[Z, "#ea7a39"]
-		];
+		];*/
+        document.getElementById("subtitle").innerHTML = "Tu n’as pas échoué tant que tu continues d'essayer !";
 	}
 	else {
-		pieces = [
+		/*pieces = [
 			[I, "#c5516a"],
 			[J, "#fa6967"],
 			[L, "#ff7065"],
@@ -703,8 +710,21 @@ function uniformeApplication(a,b,c,d){
 			[S, "#ea7a39"],
 			[T, "#a383b4"],
 			[Z, "#ce7bcb"]
-		];
+		];*/
+        document.getElementById("subtitle").innerHTML = "Repousse tes limites !";
 	}
+}
+
+
+function uniformeApplicationBis(uniformeVariable){
+	/*if (uniforme(bornesUniforme[0], bornesUniforme[1]) < uniformeVariable*bornesUniforme[1]){
+        document.getElementById("subtitle").innerHTML = "Tu n’as pas échoué tant que tu continues d'essayer !";
+	}
+	else {
+        document.getElementById("subtitle").innerHTML = "Repousse tes limites !";
+	}*/
+    res = uniformePossibilities[uniforme(bornesUniforme[0], bornesUniforme[1])];
+    document.getElementById("subtitle").innerHTML = res;
 }
 
 function poisson_distribution(lambda){
@@ -846,8 +866,74 @@ function hypergeometriqueChangeStats(hypergeometriqueVariable, hypergeometriqueV
     changeScreen();
 }
 
-uniformeApplication(-2,3,-1,3);
-poisson_distributionApplication(6);
+//uniformeApplication(-2,3,-1,3);
+uniformePossibilities = ["Repousse tes limites !", "Essaie encore une fois !", "Tu n'as pas échoué tant que tu continues d'essayer !", "Cela semble toujours impossible, jusqu'à ce qu'on le fasse !", "Ne pas s'arrêter est encore le meilleur moyen d'avancer !", "De toute façon, tu n'y arriveras jamais...", "Tu ferais mieux d'arrêter tout de suite les dégâts...", "Les probabilités prédisent déjà que tu vas échouer...", "A quoi bon essayer, c'est perdu d'avance...", "Tu ne veux pas plutôt jouer à un jeu à ton niveau ?"]
+uniformeApplicationBis(0.5);
+
+let uniformeInput = document.querySelector('#uniformeInput'),
+    uniformeParameterValue = document.querySelector('.uniformeParameterValue');
+
+uniformeParameterValue.innerHTML = uniformeInput.value;
+
+
+let uniformeBorneInfInput = document.querySelector('#uniformeBorneInfInput'),
+    uniformeBorneInfParameterValue = document.querySelector('.uniformeBorneInfParameterValue');
+let uniformeBorneSupInput = document.querySelector('#uniformeBorneSupInput'),
+    uniformeBorneSupParameterValue = document.querySelector('.uniformeBorneSupParameterValue');
+
+uniformeBorneInfParameterValue.innerHTML = uniformeBorneInfInput.value;
+
+uniformeChangeStats(uniformeInput.value, uniformeBorneInfInput.value, uniformeBorneSupInput.value);
+
+uniformeBorneSupParameterValue.innerHTML = uniformeBorneSupInput.value;
+uniformeChangeStats(uniformeInput.value, uniformeBorneInfInput.value, uniformeBorneSupInput.value);
+
+uniformeBorneInfInput.addEventListener('change', function(){
+    if(parseInt(uniformeBorneInfInput.value) >= parseInt(uniformeBorneSupInput.value)){
+        uniformeBorneInfInput.value = uniformeBorneSupInput.value-1;
+    }
+    uniformeBorneInfParameterValue.innerHTML = uniformeBorneInfInput.value;
+    uniformeChangeStats(uniformeInput.value, uniformeBorneInfInput.value, uniformeBorneSupInput.value);
+});
+uniformeBorneInfInput.addEventListener('input', function () {
+    
+  uniformeBorneInfParameterValue.innerHTML = uniformeBorneInfInput.value;
+
+uniformeChangeStats(uniformeInput.value, uniformeBorneInfInput.value, uniformeBorneSupInput.value);
+    
+}, false);
+
+
+
+
+
+uniformeBorneSupInput.addEventListener('change', function(){
+    if(parseInt(uniformeBorneSupInput.value) <= parseInt(uniformeBorneInfInput.value)){
+        uniformeBorneSupInput.value = parseInt(uniformeBorneInfInput.value)+1;
+    }
+    uniformeBorneSupParameterValue.innerHTML = uniformeBorneSupInput.value;
+    uniformeChangeStats(uniformeInput.value, uniformeBorneInfInput.value, uniformeBorneSupInput.value);
+});
+uniformeBorneSupInput.addEventListener('input', function () {
+  uniformeBorneSupParameterValue.innerHTML = uniformeBorneSupInput.value;
+uniformeChangeStats(uniformeInput.value, uniformeBorneInfInput.value, uniformeBorneSupInput.value);
+    
+}, false);
+
+uniformeInput.addEventListener('input', function () {
+  uniformeParameterValue.innerHTML = uniformeInput.value;
+
+uniformeChangeStats(uniformeInput.value, uniformeBorneInfInput.value, uniformeBorneSupInput.value);
+    
+}, false);
+function uniformeChangeStats(uniformeVariable, uniformeBorneInfVariable, uniformeBorneSupVariable){
+    uniformeParameter = uniformeVariable;
+    bornesUniforme[0] = uniformeBorneInfVariable;
+    bornesUniforme[1] = uniformeBorneSupVariable;
+    uniformeApplicationBis(uniformeVariable);
+    changeScreen();
+}
+//poisson_distributionApplication(6);
 
 let bernouilliInput = document.querySelector('#bernouilliInput'),
     bernouilliParameterValue = document.querySelector('.bernouilliParameterValue');
