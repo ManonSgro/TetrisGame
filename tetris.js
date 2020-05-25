@@ -140,7 +140,7 @@ rectsStatsHypergeometrique = {
         }
     }, click: function(){
         activeHypergeometrique=!activeHypergeometrique;
-        console.log((activeHypergeometrique)?"Désactiver":"Activer");
+        //console.log((activeHypergeometrique)?"Désactiver":"Activer");
         changeScreen();
     }}
 }
@@ -876,9 +876,9 @@ binomialeInput.addEventListener('input', function () {
   binomialeChangeStats(binomialeInput.value/10);
     
 }, false);
-for(const prop in stats){
+/*for(const prop in stats){
    console.log("."+prop+"_chance"); 
-}
+}*/
 
 function changeScreen(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
