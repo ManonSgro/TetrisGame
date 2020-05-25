@@ -639,18 +639,7 @@ function uniforme(min, max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function uniformeApplication(a,b,c,d){
-    res = uniforme(c,d);
-	if (res < b && res > a){
-        document.getElementById("subtitle").innerHTML = "Tu n’as pas échoué tant que tu continues d'essayer !";
-	}
-	else {
-        document.getElementById("subtitle").innerHTML = "Repousse tes limites !";
-	}
-}
-
-
-function uniformeApplicationBis(uniformeVariable){
+function uniformeApplication(uniformeVariable){
     res = uniformePossibilities[uniforme(bornesUniforme[0], bornesUniforme[1])];
     document.getElementById("subtitle").innerHTML = res;
 }
@@ -785,7 +774,7 @@ function hypergeometriqueChangeStats(hypergeometriqueVariable, hypergeometriqueV
 }
 
 uniformePossibilities = ["Repousse tes limites !", "Essaie encore une fois !", "Tu n'as pas échoué tant que tu continues d'essayer !", "Cela semble toujours impossible, jusqu'à ce qu'on le fasse !", "Ne pas s'arrêter est encore le meilleur moyen d'avancer !", "De toute façon, tu n'y arriveras jamais...", "Tu ferais mieux d'arrêter tout de suite les dégâts...", "Les probabilités prédisent déjà que tu vas échouer...", "A quoi bon essayer, c'est perdu d'avance...", "Tu ne veux pas plutôt jouer à un jeu à ton niveau ?"]
-uniformeApplicationBis(0.5);
+uniformeApplication(0.5);
 
 let uniformeInput = document.querySelector('#uniformeInput'),
     uniformeParameterValue = document.querySelector('.uniformeParameterValue');
@@ -844,7 +833,7 @@ function uniformeChangeStats(uniformeVariable, uniformeBorneInfVariable, uniform
     uniformeParameter = uniformeVariable;
     bornesUniforme[0] = uniformeBorneInfVariable;
     bornesUniforme[1] = uniformeBorneSupVariable;
-    uniformeApplicationBis(uniformeVariable);
+    uniformeApplication(uniformeVariable);
     changeScreen();
 }
 
