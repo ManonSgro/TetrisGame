@@ -239,23 +239,12 @@ function weightedRand(spec) {
   }
 }
 
-/*function weightedRand(spec) {
-  var i, sum=0, r=Math.random();
-  for (i in spec) {
-    sum += spec[i];
-    if (r <= sum) return i;
-  }
-}*/
 
 function newPiece() {
-	//var p = pieces[parseInt(Math.random() * pieces.length, 10)];
-    //var p = pieces[binomiale(0.5, pieces.length)]; 
     res = binomiale(binomialeInput.value/10, pieces.length);
     var p = pieces[res];
     statsReels[Object.getOwnPropertyNames(statsReels)[res]]++;
-	//return new Piece(p[0], p[1]);
     randomColor = poisson_distribution(poissonDistributionParameter-1);
-    //console.log(randomColor);
     if(randomColor>Object.keys(statsPoisson).length-1){
         randomColor = Object.keys(statsPoisson).length-1;
     }
@@ -280,7 +269,6 @@ function Piece(patterns, color) {
 	this.pattern = patterns[0];
 	this.patterns = patterns;
 	this.patterni = 0;
-
     switch(color){
         case "cyan":
             this.color = "#4dffd5";
@@ -307,8 +295,6 @@ function Piece(patterns, color) {
             this.color = "#ddd";
             break;
     }
-	//this.color = color;
-
 	this.x = width/2-parseInt(Math.ceil(this.pattern.length/2), 10);
 	this.y = -2;
 }
@@ -316,12 +302,9 @@ function Piece(patterns, color) {
 Piece.prototype.rotate = function() {
 	var nudge = 0;
 	var nextpat = this.patterns[(this.patterni + 1) % this.patterns.length];
-
 	if (this._collides(0, 0, nextpat)) {
-		// Check kickback
 		nudge = this.x > width / 2 ? -1 : 1;
 	}
-
 	if (!this._collides(nudge, 0, nextpat)) {
 		this.undraw();
 		this.x += nudge;
@@ -339,14 +322,12 @@ Piece.prototype._collides = function(dx, dy, pat) {
 			if (!pat[ix][iy]) {
 				continue;
 			}
-
 			var x = this.x + ix + dx;
 			var y = this.y + iy + dy;
 			if (y >= height || x < 0 || x >= width) {
 				return WALL;
 			}
 			if (y < 0) {
-				// Ignore negative space rows
 				continue;
 			}
 			if (board[y][x] !== "") {
@@ -354,7 +335,6 @@ Piece.prototype._collides = function(dx, dy, pat) {
 			}
 		}
 	}
-
 	return 0;
 };
 
@@ -393,10 +373,8 @@ Piece.prototype.lock = function() {
 			if (!this.pattern[ix][iy]) {
 				continue;
 			}
-
 			if (this.y + iy < 0) {
-				// Game ends!
-				//alert("You're done!");
+				// Game ends
 				done = true;
                 activeScreen = "menu";
                 changeScreen();
@@ -405,7 +383,6 @@ Piece.prototype.lock = function() {
 			board[this.y + iy][this.x + ix] = this.color;
 		}
 	}
-
 	var nlines = 0;
 	for (var y = 0; y < height; y++) {
 		var line = true;
@@ -424,7 +401,6 @@ Piece.prototype.lock = function() {
 			nlines++;
 		}
 	}
-
 	if (nlines > 0) {
 		lines += nlines;
 		drawBoard();
@@ -448,7 +424,6 @@ Piece.prototype._fill = function(color) {
 };
 
 Piece.prototype.undraw = function(ctx) {
-	//this._fill(clear);
     this._fill("#fff");
 };
 
@@ -534,18 +509,14 @@ function drawMenu() {
     ctx.clearRect(0,0,canvas.width, canvas.height);
     ctx.fillStyle = "rgba(255,255,255, 0.7)";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
     drawAllBtn(rectsMenu);
 }
 
 function drawBoard() {
 	var fs = ctx.fillStyle;
-    //ctx.fillStyle = "#fff";
 	for (var y = 0; y < height; y++) {
 		for (var x = 0; x < width; x++) {
-			//ctx.fillStyle = board[y][x] || clear;
             ctx.fillStyle = board[y][x] || "#fff";
-            //ctx.fillStyle = "#fff";
 			drawSquare(x, y, tilesz, tilesz);
 		}
 	}
@@ -555,12 +526,10 @@ function drawBoard() {
 function main() {
 	var now = Date.now();
 	var delta = now - dropStart;
-
 	if (delta > 1000) {
 		piece.down();
 		dropStart = now;
 	}
-
 	if (!done) {
 		requestAnimationFrame(main);
 	}
@@ -635,8 +604,6 @@ function bernoulliApplication(p){
         bgDarkColor = "#622e76";
 	}
 }
-//console.log("Bernoulli");
-//console.log(bernoulli(0.5));
 
 // Nombre de combinaisons de n objets pris k à k
 // On ne le fait pas en récursif car c'est moins rapide
@@ -660,21 +627,6 @@ function hypergeometrique(k, n, g, t){
 	return combin(g,k)*combin((t-g),(n-k))/combin(t,n);
 }
 
-function hypergeometriqueApplication(k, n, g, t){
-	if (hypergeometrique(k, n, g, t) <= 0.1){
-		document.body.style.fontFamily = "\"Comic Sans MS\"";
-	}
-	else if ((hypergeometrique(k, n, g, t) > 0.1) && (hypergeometrique(k, n, g, t) <= 0.2)){
-		document.body.style.fontFamily = "\"Courier New\"";
-	}
-	else if ((hypergeometrique(k, n, g, t) > 0.2) && (hypergeometrique(k, n, g, t) <= 0.3)){
-		document.body.style.fontFamily = "\"Arial Black\"";
-	}
-	else {
-		document.body.style.fontFamily = "\"Lucida Console\"";
-	}
-}
-
 // Si X suit une loi uniforme sur [a;b]
 // La probabilité de P(c≤X≤d)
 function uniformeFonctionDeRepartition(a,b,c,d){
@@ -690,39 +642,15 @@ function uniforme(min, max){
 function uniformeApplication(a,b,c,d){
     res = uniforme(c,d);
 	if (res < b && res > a){
-		/*pieces = [
-			[I, "#2e4d5c"],
-			[J, "#2fb19e"],
-			[L, "#4a94c8"],
-			[O, "#58628c"],
-			[S, "#95ce7b"],
-			[T, "#f5c748"],
-			[Z, "#ea7a39"]
-		];*/
         document.getElementById("subtitle").innerHTML = "Tu n’as pas échoué tant que tu continues d'essayer !";
 	}
 	else {
-		/*pieces = [
-			[I, "#c5516a"],
-			[J, "#fa6967"],
-			[L, "#ff7065"],
-			[O, "#fbca6e"],
-			[S, "#ea7a39"],
-			[T, "#a383b4"],
-			[Z, "#ce7bcb"]
-		];*/
         document.getElementById("subtitle").innerHTML = "Repousse tes limites !";
 	}
 }
 
 
 function uniformeApplicationBis(uniformeVariable){
-	/*if (uniforme(bornesUniforme[0], bornesUniforme[1]) < uniformeVariable*bornesUniforme[1]){
-        document.getElementById("subtitle").innerHTML = "Tu n’as pas échoué tant que tu continues d'essayer !";
-	}
-	else {
-        document.getElementById("subtitle").innerHTML = "Repousse tes limites !";
-	}*/
     res = uniformePossibilities[uniforme(bornesUniforme[0], bornesUniforme[1])];
     document.getElementById("subtitle").innerHTML = res;
 }
@@ -749,15 +677,6 @@ function poisson_distributionProba(k, lambda){
     
 }
 
-function poisson_distributionApplication(p){
-	if (poisson_distribution(p) < 7){
-		document.getElementById("subtitle").innerHTML = "Tu n’as pas échoué tant que tu continues d'essayer !";
-	}
-	else {
-		document.getElementById("subtitle").innerHTML = "Repousse tes limites !";
-
-	}
-}
 
 statsPoisson = {
     "cyan":0,
@@ -810,13 +729,13 @@ poissonInput.addEventListener('input', function () {
 
 bernouilliParameter = 0.5;
 bernoulliApplication(bernouilliParameter);
+
 hypergeometriqueParameter = 0.2;
 hypergeometriqueParameterA = 100;
 hypergeometriqueParameterN = 40;
 hypergeometriqueParameterNReel = 0;
 hypergeometriquePossibilities = [];
 
-hypergeometriqueApplication(2,5,26,52);
 let hypergeometriqueInput = document.querySelector('#hypergeometriqueInput'),
     hypergeometriqueParameterValue = document.querySelector('.hypergeometriqueParameterValue');
 
@@ -862,11 +781,9 @@ function hypergeometriqueChangeStats(hypergeometriqueVariable, hypergeometriqueV
         }
 
     }
-    //hypergeometriqueApplication(hypergeometriqueVariable);
     changeScreen();
 }
 
-//uniformeApplication(-2,3,-1,3);
 uniformePossibilities = ["Repousse tes limites !", "Essaie encore une fois !", "Tu n'as pas échoué tant que tu continues d'essayer !", "Cela semble toujours impossible, jusqu'à ce qu'on le fasse !", "Ne pas s'arrêter est encore le meilleur moyen d'avancer !", "De toute façon, tu n'y arriveras jamais...", "Tu ferais mieux d'arrêter tout de suite les dégâts...", "Les probabilités prédisent déjà que tu vas échouer...", "A quoi bon essayer, c'est perdu d'avance...", "Tu ne veux pas plutôt jouer à un jeu à ton niveau ?"]
 uniformeApplicationBis(0.5);
 
@@ -904,9 +821,6 @@ uniformeChangeStats(uniformeInput.value, uniformeBorneInfInput.value, uniformeBo
 }, false);
 
 
-
-
-
 uniformeBorneSupInput.addEventListener('change', function(){
     if(parseInt(uniformeBorneSupInput.value) <= parseInt(uniformeBorneInfInput.value)){
         uniformeBorneSupInput.value = parseInt(uniformeBorneInfInput.value)+1;
@@ -933,7 +847,6 @@ function uniformeChangeStats(uniformeVariable, uniformeBorneInfVariable, uniform
     uniformeApplicationBis(uniformeVariable);
     changeScreen();
 }
-//poisson_distributionApplication(6);
 
 let bernouilliInput = document.querySelector('#bernouilliInput'),
     bernouilliParameterValue = document.querySelector('.bernouilliParameterValue');
@@ -963,13 +876,11 @@ binomialeInput.addEventListener('input', function () {
   binomialeChangeStats(binomialeInput.value/10);
     
 }, false);
-console.log(stats);
 for(const prop in stats){
-   console.log("."+prop+"_chance"); //document.querySelector("."+prop+"_chance").innerHTML = "~"+stats[prop]+"%";
+   console.log("."+prop+"_chance"); 
 }
 
 function changeScreen(){
-    //console.log(statsReels);
     ctx.clearRect(0,0,canvas.width, canvas.height);
     switch(activeScreen){
         case "menu":
@@ -1133,19 +1044,13 @@ function resetHypergeometriqueReel(){
 }
 
 function hypergeometriqueGenerator(p, A){
-    
-    
     hypergeometriqueRandom = Math.floor(Math.random() * hypergeometriquePossibilities.length);
     res = hypergeometriquePossibilities[hypergeometriqueRandom];
     if(hypergeometriqueParameterNReel<hypergeometriqueParameterN){
         resultsHypergeometriqueReel.push(res);
         statsHypergeometriqueReel[hypergeometriqueParameterNReel] = resultsHypergeometriqueReel.filter(el => el=="facile").length/(hypergeometriqueParameterNReel+1);
         hypergeometriqueParameterNReel++;
-        
-        
-    }
-    console.log(statsHypergeometriqueReel);
-    
+    }  
     return res;
 }
 
@@ -1185,7 +1090,6 @@ function drawStatsHypergeometrique(){
     for(j=0; j<hypergeometriqueParameterN; j++){
         statsHypergeometrique[j] = hypergeometrique(j, hypergeometriqueParameterN, hypergeometriqueParameter, hypergeometriqueParameterA);
     }
-    //console.log(statsHypergeometrique);
     barChart("Histogramme :", 160, statsHypergeometrique);
 }
 
@@ -1318,9 +1222,6 @@ function drawResultsPoisson(){
     
     drawAllBtn(rects);
     
-    // Lines
-    //drawStat("Lines :", lines, 20);
-    
     //Histogramme prévu
     barChartHeight = barChart("Histogramme prévu:", 20, statsPoisson);
     
@@ -1334,9 +1235,6 @@ function drawResultsHypergeometrique(){
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     drawAllBtn(rects);
-    
-    // Lines
-    //drawStat("Lines :", lines, 20);
     
     //Histogramme prévu
     statsHypergeometrique = {
@@ -1440,18 +1338,15 @@ canvas.onmousemove = function(e) {
             }else{
                 rects[r].hover=false;
             }
-            //drawMenu();
             changeScreen();
         }
     }
 
 };
 canvas.onclick = function(e) {
-
   // Get the current mouse position
     var r = canvas.getBoundingClientRect(),
         x = e.clientX - r.left, y = e.clientY - r.top;
-    
     if( rects && rects !== "null" && rects !== "undefined" ){
         for(var r in rects){
             if( rects && rects !== "null" && rects !== "undefined" ){
@@ -1462,8 +1357,6 @@ canvas.onclick = function(e) {
             }
         }
     }
-    
-
 };
 
 changeScreen();
@@ -1503,48 +1396,3 @@ function ecartMoyen(data){
 	final = elem.reduce((f, g) => f + g, 0)
 	return final/b;
 }
-
-
-function arrayToObject(data){
-	return Object.assign({}, data);; 
-}
-
-
-
-function print(histogram, captionTop = 'Count', captionBottom = 'Values') {
-    var keys = Object.keys(histogram),
-        maxKey = keys[keys.length - 1],
-        maxValue = Math.max(...Object.values(histogram)),
-        slot0 = Math.max(captionTop.length, captionBottom.length),
-        slot = Math.max(...keys.map(k => histogram[k].toString().length), (maxKey - 1).toString().length + 1) + 3,
-        line,
-        result = '';
-    do {
-        line = (maxValue === +keys[0] ? captionTop : '').padEnd(slot0);
-        for (let k in histogram)
-            line += (histogram[k] >= maxValue ? ''.padStart(slot - 1) + 'X' : '').padEnd(slot + 1);
-        result += line + '\n';
-    } while (--maxValue)
-
-    line = ''.padEnd(slot0, '-');
-    for (let k in histogram) line += ' ' + ''.padStart(slot, '-');
-    result += line + '\n';
-    line = captionBottom.padEnd(slot0);
-    for (let k in histogram) {
-        line += (''.padStart(slot - k.length) + k).padEnd(slot + 1);
-    }
-    result += line;
-    return result;
-}
-//document.getElementById('out').innerHTML = print({ 1: 3, 2: 3, 3: 1, 5: 3, 6: 7, 7:8 });
-
-
-console.log(moyenne([5, 1, 1, 1, 5]));
-console.log(ecartType([5, 1, 1, 1, 5]));
-console.log(ecartMoyen([5, 1, 1, 1, 5]));
-
-var obj = arrayToObject([5, 1, 1, 1, 5])
-console.log(obj);
-//document.getElementById('out').innerHTML = print(obj);
-console.log(stats);
-//document.getElementById('out').innerHTML = print(stats);
