@@ -1024,13 +1024,16 @@ function drawStatsMoyenne(){
     drawAllBtn(rectsStatsMoyenne);
     
     // Moyenne
-    drawStat("Moyenne :", arrondiAuCentième(moyenne([5, 1, 1, 1, 5])), 20);
+    drawStat("Valeurs :", "[5, 1, 1, 1, 5]", 20);
+    
+    // Moyenne
+    drawStat("Moyenne :", arrondiAuCentième(moyenne([5, 1, 1, 1, 5])), 60);
     
     //Ecart type
-    drawStat("Ecart type :", arrondiAuCentième(ecartType([5, 1, 1, 1, 5])), 40);
+    drawStat("Ecart type :", arrondiAuCentième(ecartType([5, 1, 1, 1, 5])), 80);
     
     //Ecart moyen
-    drawStat("Ecart moyen :", arrondiAuCentième(ecartMoyen([5, 1, 1, 1, 5])), 60);
+    drawStat("Ecart moyen :", arrondiAuCentième(ecartMoyen([5, 1, 1, 1, 5])), 100);
 }
 
 
